@@ -1,0 +1,4406 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="PyPTO 编译器学习文档 - 整合 pypto、pto-as、pto-isa 三个项目的中文文档">
+      
+      
+        <meta name="author" content="PyPTO Learner">
+      
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>PyPTO 语言指南 - PyPTO 学习文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pypto-语言指南" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="PyPTO 学习文档" class="md-header__button md-logo" aria-label="PyPTO 学习文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyPTO 学习文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PyPTO 语言指南
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../dev/passes/00-pass_manager/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  PyPTO
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../pto-as/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  pto-as
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../pto-isa/01-overview_zh/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  pto-isa
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="PyPTO 学习文档" class="md-nav__button md-logo" aria-label="PyPTO 学习文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PyPTO 学习文档
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyPTO
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PyPTO
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/00-pass_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pass 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pass 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/00-pass_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/01-unroll_loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UnrollLoops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/02-ctrl_flow_transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CtrlFlowTransform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/03-convert_to_ssa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ConvertToSSA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/04-flatten_call_expr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FlattenCallExpr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/05-split_chunked_loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SplitChunkedLoops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/06-interchange_chunk_loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InterchangeChunkLoops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/07-outline_incore_scopes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OutlineIncoreScopes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/08-outline_cluster_scopes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OutlineClusterScopes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/10-flatten_tile_nd_to_2d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FlattenTileNdTo2D
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/12-init_memref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InitMemRef
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/15-memory_reuse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MemoryReuse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/14-insert_sync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InsertSync
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/16-utility_passes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utility Passes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/passes/99-verifier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verifier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IR 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IR 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/ir/00-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IR 概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/ir/01-hierarchy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    层级结构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/ir/02-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    类型系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/ir/03-structural_comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    结构对比
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/ir/04-serialization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    序列化
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/ir/05-operators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    操作符
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/ir/06-builder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/ir/07-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codegen 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Codegen 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/codegen/00-pto_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/codegen/01-cce_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CCE Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/codegen/02-orchestration_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestration Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../dev/language/00-python_syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 语法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    参考文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    参考文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6_1" id="__nav_2_6_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO-ISA 参考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PTO-ISA 参考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/pto-isa/00-cluster_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster 架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/pto-isa/01-tpush_tpop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TPUSH/TPOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../reference/pto-isa/02-buffer_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Buffer 管理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../pto-as/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pto-as
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    pto-as
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    入门
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    入门
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/01-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO IR 概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/no_npu_compile_only_guide_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    无 NPU 编译指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    参考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    参考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/02-type-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    类型系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/03-enums-attrs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    枚举与属性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/04-operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    操作参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/PTO_IR_manual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    完整 PTO IR 手册
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/05-passes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端 Pass
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    操作详解
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    操作详解
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/operations/README_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/operations/elementwise-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    逐元素操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/operations/tile-scalar-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tile-标量操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/operations/axis-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    轴归约扩展
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/operations/memory-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内存操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/operations/matrix-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    矩阵操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/operations/data-movement-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据搬运
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/operations/complex-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    复杂操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/operations/scalar-arith-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    标量算术
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/operations/control-flow-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    控制流
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设计文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    设计文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-as/designs/ptoas-tpush-tpop-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TPUSH/TPOP 设计
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pto-isa
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    pto-isa
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/01-overview_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/02-machine-model_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    机器模型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/03-state-and-types_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    状态与类型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/04-tiles-and-globaltensor_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tile 与 GlobalTensor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/05-synchronization_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    同步机制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/06-assembly_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    汇编语言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/07-instructions_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指令集
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/08-programming_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    编程指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/09-virtual-isa-and-ir_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    虚拟 ISA 与 IR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/10-bytecode-and-toolchain_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    字节码与工具链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/11-memory-ordering-and-consistency_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内存顺序与一致性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/12-backend-profiles-and-conformance_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端配置与一致性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_13" id="__nav_4_13_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    附录
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    附录
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/appendix-a-glossary_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    术语表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/appendix-b-instruction-contract-template_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指令契约模板
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/appendix-c-diagnostics-taxonomy_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    诊断分类
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/appendix-d-instruction-family-matrix_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指令族矩阵
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#类型系统" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        类型系统
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="类型系统">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#数据类型datatype" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        数据类型（DataType）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#容器类型" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        容器类型
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#张量布局tensorlayout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        张量布局（TensorLayout）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#动态形状dynamic-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        动态形状（Dynamic Shapes）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数方向parameter-directions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数方向（Parameter Directions）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#操作" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        操作
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="操作">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#分发模型dispatch-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分发模型（Dispatch Model）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#python-运算符" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python 运算符
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#统一操作unified-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        统一操作（Unified Operations）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#变量赋值与-ssa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        变量赋值与 SSA
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="变量赋值与 SSA">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#编写风格" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        编写风格
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#自动-ssa-转换" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        自动 SSA 转换
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#严格-ssa-模式" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        严格 SSA 模式
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#为什么需要-yield_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        为什么需要 yield_
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#控制流" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        控制流
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="控制流">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-循环--plrange" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For 循环 —— pl.range()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#并行循环--plparallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        并行循环 —— pl.parallel()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#while-循环--plwhile_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        While 循环 —— pl.while_()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ifelse-与-plyield_" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If/Else 与 pl.yield_()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#程序与函数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        程序与函数
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="程序与函数">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#plfunction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @pl.function
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plprogram" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @pl.program
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plinline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @pl.inline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#外部函数调用" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        外部函数调用
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#incore-作用域" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InCore 作用域
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#内存与数据搬运" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内存与数据搬运
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="内存与数据搬运">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#内存层次结构" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内存层次结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#内存空间memoryspace简称-mem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内存空间（MemorySpace，简称 Mem）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#数据搬运操作" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        数据搬运操作
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#模式矩阵乘法ddr--mat--leftright--acc--ddr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        模式：矩阵乘法（DDR → Mat → Left/Right → Acc → DDR）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#编译" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        编译
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="编译">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ircompile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ir.compile()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#优化流水线" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        优化流水线
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#调试" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        调试
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="pypto-语言指南">PyPTO 语言指南<a class="headerlink" href="#pypto-语言指南" title="Permanent link">&para;</a></h1>
+<p><code>pypto.language</code>（<code>pl</code>）模块的完整参考。</p>
+<h2 id="类型系统">类型系统<a class="headerlink" href="#类型系统" title="Permanent link">&para;</a></h2>
+<h3 id="数据类型datatype">数据类型（DataType）<a class="headerlink" href="#数据类型datatype" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>常量</th>
+<th>位数</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pl.BOOL</code></td>
+<td>1</td>
+<td>布尔值</td>
+</tr>
+<tr>
+<td><code>pl.INT4</code> / <code>pl.UINT4</code></td>
+<td>4</td>
+<td>有符号 / 无符号 4 位整数</td>
+</tr>
+<tr>
+<td><code>pl.INT8</code> / <code>pl.UINT8</code></td>
+<td>8</td>
+<td>有符号 / 无符号 8 位整数</td>
+</tr>
+<tr>
+<td><code>pl.INT16</code> / <code>pl.UINT16</code></td>
+<td>16</td>
+<td>有符号 / 无符号 16 位整数</td>
+</tr>
+<tr>
+<td><code>pl.INT32</code> / <code>pl.UINT32</code></td>
+<td>32</td>
+<td>有符号 / 无符号 32 位整数</td>
+</tr>
+<tr>
+<td><code>pl.INT64</code> / <code>pl.UINT64</code></td>
+<td>64</td>
+<td>有符号 / 无符号 64 位整数</td>
+</tr>
+<tr>
+<td><code>pl.FP16</code></td>
+<td>16</td>
+<td>IEEE 半精度浮点</td>
+</tr>
+<tr>
+<td><code>pl.BF16</code></td>
+<td>16</td>
+<td>Brain Float 16</td>
+</tr>
+<tr>
+<td><code>pl.FP32</code></td>
+<td>32</td>
+<td>IEEE 单精度浮点</td>
+</tr>
+<tr>
+<td><code>pl.FP4</code></td>
+<td>4</td>
+<td>4 位浮点</td>
+</tr>
+<tr>
+<td><code>pl.FP8E4M3FN</code></td>
+<td>8</td>
+<td>8 位浮点（e4m3fn）</td>
+</tr>
+<tr>
+<td><code>pl.FP8E5M2</code></td>
+<td>8</td>
+<td>8 位浮点（e5m2）</td>
+</tr>
+<tr>
+<td><code>pl.HF4</code> / <code>pl.HF8</code></td>
+<td>4/8</td>
+<td>昇腾浮点格式</td>
+</tr>
+<tr>
+<td><code>pl.INDEX</code></td>
+<td>64</td>
+<td>索引计算类型 —— 循环变量、维度</td>
+</tr>
+</tbody>
+</table>
+<h3 id="容器类型">容器类型<a class="headerlink" href="#容器类型" title="Permanent link">&para;</a></h3>
+<p><strong><code>pl.Tensor[[shape], dtype]</code></strong> —— DDR 内存数组（片外全局内存）。</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="n">x</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span>        <span class="c1"># 二维，64×128，float32</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="n">y</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">256</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP16</span><span class="p">]</span>            <span class="c1"># 一维，256 个元素，float16</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="n">z</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP16</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">NZ</span><span class="p">]</span> <span class="c1"># 带 NZ 布局</span>
+</span></code></pre></div>
+<p><strong><code>pl.Tile[[shape], dtype]</code></strong> —— 片上内存缓冲区（默认统一缓冲区）。</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="n">t</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tile</span><span class="p">[[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span>           <span class="c1"># 二维 tile，64×64</span>
+</span></code></pre></div>
+<p><strong><code>pl.Scalar[dtype]</code></strong> —— 单个标量值。</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">s</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Scalar</span><span class="p">[</span><span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span>                   <span class="c1"># float32 标量</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">idx</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Scalar</span><span class="p">[</span><span class="n">pl</span><span class="o">.</span><span class="n">INDEX</span><span class="p">]</span>                <span class="c1"># 索引标量</span>
+</span></code></pre></div>
+<h3 id="张量布局tensorlayout">张量布局（TensorLayout）<a class="headerlink" href="#张量布局tensorlayout" title="Permanent link">&para;</a></h3>
+<p>布局控制 Tensor 的物理内存排列：</p>
+<table>
+<thead>
+<tr>
+<th>布局</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pl.ND</code></td>
+<td>N 维（默认，行优先）</td>
+</tr>
+<tr>
+<td><code>pl.DN</code></td>
+<td>DN 布局</td>
+</tr>
+<tr>
+<td><code>pl.NZ</code></td>
+<td>NZ 分形格式（硬件特定分块）</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># 指定布局作为第三个类型参数</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">a</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">128</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP16</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">NZ</span><span class="p">]</span>
+</span></code></pre></div>
+<h3 id="动态形状dynamic-shapes">动态形状（Dynamic Shapes）<a class="headerlink" href="#动态形状dynamic-shapes" title="Permanent link">&para;</a></h3>
+<p>使用 <code>pl.dynamic()</code> 声明运行时确定的维度：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="n">M</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">dynamic</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">)</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">N</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">dynamic</span><span class="p">(</span><span class="s2">&quot;N&quot;</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="k">def</span><span class="w"> </span><span class="nf">dynamic_kernel</span><span class="p">(</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="n">a</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">],</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<h3 id="参数方向parameter-directions">参数方向（Parameter Directions）<a class="headerlink" href="#参数方向parameter-directions" title="Permanent link">&para;</a></h3>
+<p>默认情况下，参数为只读输入。使用包装器声明输出参数：</p>
+<table>
+<thead>
+<tr>
+<th>方向</th>
+<th>语法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>输入（默认）</td>
+<td><code>a: pl.Tensor[...]</code></td>
+<td>只读</td>
+</tr>
+<tr>
+<td>输出</td>
+<td><code>a: pl.Out[pl.Tensor[...]]</code></td>
+<td>只写输出</td>
+</tr>
+<tr>
+<td>输入/输出</td>
+<td><code>a: pl.InOut[pl.Tensor[...]]</code></td>
+<td>读写</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">kernel</span><span class="p">(</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>    <span class="n">input_a</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">],</span>                    <span class="c1"># In</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a>    <span class="n">output_b</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Out</span><span class="p">[</span><span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]],</span>            <span class="c1"># Out</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a>    <span class="n">accum_c</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">InOut</span><span class="p">[</span><span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]],</span>           <span class="c1"># InOut</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<h2 id="操作">操作<a class="headerlink" href="#操作" title="Permanent link">&para;</a></h2>
+<h3 id="分发模型dispatch-model">分发模型（Dispatch Model）<a class="headerlink" href="#分发模型dispatch-model" title="Permanent link">&para;</a></h3>
+<p>PyPTO 操作分为三个层级：</p>
+<table>
+<thead>
+<tr>
+<th>命名空间</th>
+<th>层级</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>pl.*</code></td>
+<td>统一</td>
+<td>根据输入类型（Tensor 或 Tile）自动分发</td>
+</tr>
+<tr>
+<td><code>pl.tensor.*</code></td>
+<td>Tensor</td>
+<td>DDR 级别的 <code>Tensor</code> 操作</td>
+</tr>
+<tr>
+<td><code>pl.tile.*</code></td>
+<td>Tile</td>
+<td>片上 <code>Tile</code> 操作</td>
+</tr>
+</tbody>
+</table>
+<p><strong>推荐：</strong> 尽量使用 <code>pl.*</code>（统一接口）。分发器会选择正确的实现。</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># 统一接口 —— Tensor 和 Tile 都适用</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">result</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>       <span class="c1"># 分发到 tensor.add 或 tile.add</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="n">result</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">scalar</span><span class="p">)</span>   <span class="c1"># 分发到 tensor.muls 或 tile.muls</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="c1"># 显式 tile 级别（需要 tile 特定操作时）</span>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="n">tile</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">])</span>
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="n">tile</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">tile</span><span class="o">.</span><span class="n">adds</span><span class="p">(</span><span class="n">tile</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="python-运算符">Python 运算符<a class="headerlink" href="#python-运算符" title="Permanent link">&para;</a></h3>
+<p>标准 Python 运算符映射到 IR 操作：</p>
+<table>
+<thead>
+<tr>
+<th>Python</th>
+<th>IR 操作</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>a + b</code></td>
+<td><code>add</code></td>
+<td><code>c = a + b</code></td>
+</tr>
+<tr>
+<td><code>a - b</code></td>
+<td><code>sub</code></td>
+<td><code>c = a - b</code></td>
+</tr>
+<tr>
+<td><code>a * b</code></td>
+<td><code>mul</code></td>
+<td><code>c = a * b</code></td>
+</tr>
+<tr>
+<td><code>a / b</code></td>
+<td><code>div</code></td>
+<td><code>c = a / b</code></td>
+</tr>
+<tr>
+<td><code>a == b</code></td>
+<td><code>eq</code>（比较）</td>
+<td><code>if a == 0:</code></td>
+</tr>
+<tr>
+<td><code>a != b</code></td>
+<td><code>ne</code>（比较）</td>
+<td><code>if a != 0:</code></td>
+</tr>
+<tr>
+<td><code>a &lt; b</code></td>
+<td><code>lt</code>（比较）</td>
+<td><code>if a &lt; n:</code></td>
+</tr>
+<tr>
+<td><code>a &gt; b</code></td>
+<td><code>gt</code>（比较）</td>
+<td><code>if a &gt; 0:</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="统一操作unified-operations">统一操作（Unified Operations）<a class="headerlink" href="#统一操作unified-operations" title="Permanent link">&para;</a></h3>
+<p>常用 <code>pl.*</code> 操作 —— 完整列表参见<a href="../02-operation_reference/">操作参考</a>：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">c</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>            <span class="c1"># 算术（还有 sub、mul、div）</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="n">c</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>          <span class="c1"># 标量右操作数自动检测</span>
+</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="n">c</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP16</span><span class="p">)</span>     <span class="c1"># 类型转换</span>
+</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="n">c</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>  <span class="c1"># 形状操作（还有 transpose、slice）</span>
+</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a><span class="n">c</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>         <span class="c1"># 线性代数</span>
+</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="n">c</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">row_sum</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>            <span class="c1"># 归约（还有 row_max）</span>
+</span></code></pre></div>
+<p>Tensor 和 Tile 类型支持 Python 下标语法作为 <code>slice</code>/<code>read</code> 的语法糖：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="n">row</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span> <span class="p">:]</span>       <span class="c1"># 等价于 pl.slice(A, [16, N], [0, 0])</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">elem</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>         <span class="c1"># 等价于 pl.tensor.read(A, [i, j]) / pl.tile.read(A, [i, j])</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="n">block</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">16</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">32</span><span class="p">]</span>  <span class="c1"># 等价于 pl.slice(A, [16, 32], [0, 0])</span>
+</span></code></pre></div>
+<p>需要 tile 特定操作（内存搬运、广播、位运算等）时使用 <code>pl.tile.*</code>。</p>
+<h2 id="变量赋值与-ssa">变量赋值与 SSA<a class="headerlink" href="#变量赋值与-ssa" title="Permanent link">&para;</a></h2>
+<p>PyPTO 的 IR 同时支持 <strong>SSA</strong>（静态单赋值，Static Single Assignment）和**非 SSA** 两种形式。在 SSA 形式中，每个变量只被赋值一次；在非 SSA 形式中，可以对同一个变量名多次赋值。</p>
+<h3 id="编写风格">编写风格<a class="headerlink" href="#编写风格" title="Permanent link">&para;</a></h3>
+<p><strong>非 SSA（默认）</strong> —— 像普通 Python 一样自由重新赋值：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="n">result</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="n">result</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># 重新赋值，没问题</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    <span class="k">return</span> <span class="n">result</span>
+</span></code></pre></div>
+<p><strong>SSA 风格</strong> —— 每个变量只赋值一次，使用不同的名称：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    <span class="n">result_0</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>    <span class="n">result_1</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">result_0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>    <span class="k">return</span> <span class="n">result_1</span>
+</span></code></pre></div>
+<p>两种方式都能生成有效的 IR。选择你更习惯的风格即可。</p>
+<h3 id="自动-ssa-转换">自动 SSA 转换<a class="headerlink" href="#自动-ssa-转换" title="Permanent link">&para;</a></h3>
+<p>大多数优化 pass 需要 SSA 形式。编译流水线会在早期自动运行 <code>ConvertToSSA</code>，因此你无需担心 —— 直接编写非 SSA 代码，编译器会自动处理转换。</p>
+<h3 id="严格-ssa-模式">严格 SSA 模式<a class="headerlink" href="#严格-ssa-模式" title="Permanent link">&para;</a></h3>
+<p>传入 <code>strict_ssa=True</code> 可在解析阶段强制要求 SSA。如果重新赋值变量，解析器将报错：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="n">strict_ssa</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">example</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">result</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">result</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># 报错：SSAViolationError</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="k">return</span> <span class="n">result</span>
+</span></code></pre></div>
+<p>这对于捕获无意的变量覆盖很有用，但完全是可选的。</p>
+<h3 id="为什么需要-yield_">为什么需要 <code>yield_</code><a class="headerlink" href="#为什么需要-yield_" title="Permanent link">&para;</a></h3>
+<p>在 SSA 形式中，控制流（循环、if/else）不能简单地重新赋值变量 —— 每次赋值必须是唯一的。<code>pl.yield_()</code> 是将值从控制流作用域中传出的机制：</p>
+<ul>
+<li><strong>循环</strong>：<code>pl.yield_()</code> 将更新后的累加器传递给下一次迭代</li>
+<li><strong>If/else</strong>：两个分支中的 <code>pl.yield_()</code> 创建一个合并点（phi 节点），产生一个结果变量</li>
+</ul>
+<p>这就是为什么带累加器的循环需要 <code>init_values</code> + <code>yield_</code>，以及为什么产生值的 if/else 分支必须都使用 <code>yield_</code>。</p>
+<h2 id="控制流">控制流<a class="headerlink" href="#控制流" title="Permanent link">&para;</a></h2>
+<h3 id="for-循环--plrange">For 循环 —— <code>pl.range()</code><a class="headerlink" href="#for-循环--plrange" title="Permanent link">&para;</a></h3>
+<p><strong>简单循环：</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pl</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    <span class="c1"># i = 0, 1, 2, ..., 9</span>
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    <span class="o">...</span>
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pl</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    <span class="c1"># i = 2, 3, ..., 9</span>
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    <span class="o">...</span>
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pl</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    <span class="c1"># i = 0, 4, 8, ..., 96</span>
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<p><strong>带累加器的循环（<code>init_values</code>）：</strong></p>
+<p>累加器在迭代之间传递值。每次迭代接收前一次的值，必须 <code>yield_</code> 新值：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">sum_16_elements</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">16</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    <span class="n">init_sum</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">create_tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">)</span>
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">running_sum</span><span class="p">,)</span> <span class="ow">in</span> <span class="n">pl</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">init_values</span><span class="o">=</span><span class="p">(</span><span class="n">init_sum</span><span class="p">,)):</span>
+</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a>        <span class="n">chunk</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>        <span class="n">new_sum</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">running_sum</span><span class="p">,</span> <span class="n">chunk</span><span class="p">)</span>
+</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>        <span class="n">sum_out</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">1</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">yield_</span><span class="p">(</span><span class="n">new_sum</span><span class="p">)</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a>    <span class="c1"># 循环结束后 sum_out 保存最终累加值</span>
+</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a>    <span class="k">return</span> <span class="n">sum_out</span>
+</span></code></pre></div>
+<p><strong>多个累加器：</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">find_max_and_sum</span><span class="p">(</span>
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    <span class="n">data</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">],</span>
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>    <span class="n">init_max</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">create_tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">)</span>
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>    <span class="n">init_sum</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">create_tensor</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">)</span>
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">acc_max</span><span class="p">,</span> <span class="n">acc_sum</span><span class="p">)</span> <span class="ow">in</span> <span class="n">pl</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">init_values</span><span class="o">=</span><span class="p">(</span><span class="n">init_max</span><span class="p">,</span> <span class="n">init_sum</span><span class="p">)):</span>
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>        <span class="n">row</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">slice</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>        <span class="n">new_max</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">acc_max</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span>
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>        <span class="n">new_sum</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">acc_sum</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span>
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>        <span class="n">out_max</span><span class="p">,</span> <span class="n">out_sum</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">yield_</span><span class="p">(</span><span class="n">new_max</span><span class="p">,</span> <span class="n">new_sum</span><span class="p">)</span>
+</span><span id="__span-14-13"><a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>
+</span><span id="__span-14-14"><a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>    <span class="k">return</span> <span class="n">out_sum</span>
+</span></code></pre></div>
+<h3 id="并行循环--plparallel">并行循环 —— <code>pl.parallel()</code><a class="headerlink" href="#并行循环--plparallel" title="Permanent link">&para;</a></h3>
+<p>语法与 <code>pl.range()</code> 相同，但迭代可以并行执行：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">pl</span><span class="o">.</span><span class="n">parallel</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">num_blocks</span><span class="p">):</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>    <span class="c1"># 迭代相互独立，可以并行运行</span>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<h3 id="while-循环--plwhile_">While 循环 —— <code>pl.while_()</code><a class="headerlink" href="#while-循环--plwhile_" title="Permanent link">&para;</a></h3>
+<p>始终需要 <code>init_values</code>。条件通过 <code>pl.cond()</code> 作为循环体的**第一条语句**设置：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,)</span> <span class="ow">in</span> <span class="n">pl</span><span class="o">.</span><span class="n">while_</span><span class="p">(</span><span class="n">init_values</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,)):</span>
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>    <span class="n">pl</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span>          <span class="c1"># 当 x &lt; 10 时继续</span>
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>    <span class="n">new_x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>    <span class="n">x_out</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">yield_</span><span class="p">(</span><span class="n">new_x</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="ifelse-与-plyield_">If/Else 与 <code>pl.yield_()</code><a class="headerlink" href="#ifelse-与-plyield_" title="Permanent link">&para;</a></h3>
+<p>产生值的分支必须 <code>yield_</code> 这些值。这会创建 SSA phi 节点 —— 两个分支必须 yield 相同数量和类型的值：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">conditional_update</span><span class="p">(</span>
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>    <span class="n">a</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">],</span>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a>    <span class="n">delta</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">],</span>
+</span><span id="__span-17-5"><a id="__codelineno-17-5" name="__codelineno-17-5" href="#__codelineno-17-5"></a><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-17-6"><a id="__codelineno-17-6" name="__codelineno-17-6" href="#__codelineno-17-6"></a>    <span class="n">init</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">create_tensor</span><span class="p">([</span><span class="mi">64</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">)</span>
+</span><span id="__span-17-7"><a id="__codelineno-17-7" name="__codelineno-17-7" href="#__codelineno-17-7"></a>
+</span><span id="__span-17-8"><a id="__codelineno-17-8" name="__codelineno-17-8" href="#__codelineno-17-8"></a>    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">prev</span><span class="p">,)</span> <span class="ow">in</span> <span class="n">pl</span><span class="o">.</span><span class="n">range</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">init_values</span><span class="o">=</span><span class="p">(</span><span class="n">init</span><span class="p">,)):</span>
+</span><span id="__span-17-9"><a id="__codelineno-17-9" name="__codelineno-17-9" href="#__codelineno-17-9"></a>        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+</span><span id="__span-17-10"><a id="__codelineno-17-10" name="__codelineno-17-10" href="#__codelineno-17-10"></a>            <span class="n">result</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">yield_</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+</span><span id="__span-17-11"><a id="__codelineno-17-11" name="__codelineno-17-11" href="#__codelineno-17-11"></a>        <span class="k">else</span><span class="p">:</span>
+</span><span id="__span-17-12"><a id="__codelineno-17-12" name="__codelineno-17-12" href="#__codelineno-17-12"></a>            <span class="n">updated</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
+</span><span id="__span-17-13"><a id="__codelineno-17-13" name="__codelineno-17-13" href="#__codelineno-17-13"></a>            <span class="n">result</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">yield_</span><span class="p">(</span><span class="n">updated</span><span class="p">)</span>
+</span><span id="__span-17-14"><a id="__codelineno-17-14" name="__codelineno-17-14" href="#__codelineno-17-14"></a>        <span class="c1"># result 保存执行的那个分支的值</span>
+</span><span id="__span-17-15"><a id="__codelineno-17-15" name="__codelineno-17-15" href="#__codelineno-17-15"></a>        <span class="n">out</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">yield_</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</span><span id="__span-17-16"><a id="__codelineno-17-16" name="__codelineno-17-16" href="#__codelineno-17-16"></a>
+</span><span id="__span-17-17"><a id="__codelineno-17-17" name="__codelineno-17-17" href="#__codelineno-17-17"></a>    <span class="k">return</span> <span class="n">out</span>
+</span></code></pre></div>
+<p><strong>规则：</strong> 如果一个分支 yield，另一个也必须 yield。两个分支 yield 相同数量的值。</p>
+<h2 id="程序与函数">程序与函数<a class="headerlink" href="#程序与函数" title="Permanent link">&para;</a></h2>
+<h3 id="plfunction"><code>@pl.function</code><a class="headerlink" href="#plfunction" title="Permanent link">&para;</a></h3>
+<p>将 Python 函数解析为 IR：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">my_func</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<p>指定函数类型：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">FunctionType</span><span class="o">.</span><span class="n">InCore</span><span class="p">)</span>
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">compute_kernel</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>    <span class="o">...</span>
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">FunctionType</span><span class="o">.</span><span class="n">Orchestration</span><span class="p">)</span>
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a><span class="k">def</span><span class="w"> </span><span class="nf">task_graph</span><span class="p">(</span><span class="o">...</span><span class="p">):</span>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>    <span class="o">...</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>函数类型</th>
+<th>说明</th>
+<th>典型用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Opaque</code></td>
+<td>未指定上下文（默认）</td>
+<td>独立函数</td>
+</tr>
+<tr>
+<td><code>InCore</code></td>
+<td>AICore 计算内核</td>
+<td>Load/compute/store 模式</td>
+</tr>
+<tr>
+<td><code>Orchestration</code></td>
+<td>主机端协调器</td>
+<td>创建张量、调度 InCore 任务</td>
+</tr>
+</tbody>
+</table>
+<h3 id="plprogram"><code>@pl.program</code><a class="headerlink" href="#plprogram" title="Permanent link">&para;</a></h3>
+<p>将多个函数组成可编译的程序：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">program</span>
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyProgram</span><span class="p">:</span>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>    <span class="nd">@pl</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">FunctionType</span><span class="o">.</span><span class="n">InCore</span><span class="p">)</span>
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">kernel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>        <span class="o">...</span>
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>    <span class="nd">@pl</span><span class="o">.</span><span class="n">function</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">FunctionType</span><span class="o">.</span><span class="n">Orchestration</span><span class="p">)</span>
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">kernel</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>   <span class="c1"># 跨函数调用</span>
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>        <span class="k">return</span> <span class="n">result</span>
+</span></code></pre></div>
+<p><strong>规则：</strong></p>
+<ul>
+<li>每个方法必须有 <code>self</code> 作为第一个参数（从 IR 中去除）</li>
+<li>跨函数调用使用 <code>self.method_name(...)</code></li>
+<li>装饰后的类成为 <code>ir.Program</code>，不是 Python 类</li>
+</ul>
+<h3 id="plinline"><code>@pl.inline</code><a class="headerlink" href="#plinline" title="Permanent link">&para;</a></h3>
+<p>定义一个在每个调用点展开其函数体的函数（程序中不会有单独的函数）：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">inline</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>    <span class="n">result</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a>    <span class="k">return</span> <span class="n">result</span>
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a>
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">program</span>
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyProgram</span><span class="p">:</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a>    <span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a>        <span class="n">y</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># 函数体在此处内联</span>
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a>        <span class="k">return</span> <span class="n">y</span>
+</span></code></pre></div>
+<h3 id="外部函数调用">外部函数调用<a class="headerlink" href="#外部函数调用" title="Permanent link">&para;</a></h3>
+<p>独立的 <code>@pl.function</code> 可以在 <code>@pl.program</code> 内被调用。它会作为单独的函数添加到程序中：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a><span class="k">def</span><span class="w"> </span><span class="nf">softmax</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>    <span class="o">...</span>
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">program</span>
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a><span class="k">class</span><span class="w"> </span><span class="nc">Model</span><span class="p">:</span>
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>    <span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-22-8"><a id="__codelineno-22-8" name="__codelineno-22-8" href="#__codelineno-22-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]:</span>
+</span><span id="__span-22-9"><a id="__codelineno-22-9" name="__codelineno-22-9" href="#__codelineno-22-9"></a>        <span class="n">y</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">softmax</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>  <span class="c1"># 调用外部函数</span>
+</span><span id="__span-22-10"><a id="__codelineno-22-10" name="__codelineno-22-10" href="#__codelineno-22-10"></a>        <span class="k">return</span> <span class="n">y</span>
+</span></code></pre></div>
+<h3 id="incore-作用域">InCore 作用域<a class="headerlink" href="#incore-作用域" title="Permanent link">&para;</a></h3>
+<p>将代码区域标记为 InCore 执行，无需创建单独的函数：</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a><span class="k">with</span> <span class="n">pl</span><span class="o">.</span><span class="n">incore</span><span class="p">():</span>
+</span><span id="__span-23-2"><a id="__codelineno-23-2" name="__codelineno-23-2" href="#__codelineno-23-2"></a>    <span class="n">y</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">64</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="内存与数据搬运">内存与数据搬运<a class="headerlink" href="#内存与数据搬运" title="Permanent link">&para;</a></h2>
+<h3 id="内存层次结构">内存层次结构<a class="headerlink" href="#内存层次结构" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>DDR（片外，全局内存）
+</span><span id="__span-24-2"><a id="__codelineno-24-2" name="__codelineno-24-2" href="#__codelineno-24-2"></a> │
+</span><span id="__span-24-3"><a id="__codelineno-24-3" name="__codelineno-24-3" href="#__codelineno-24-3"></a> ├── Vec（统一缓冲区，片上）         ← pl.load() / pl.store()
+</span><span id="__span-24-4"><a id="__codelineno-24-4" name="__codelineno-24-4" href="#__codelineno-24-4"></a> │    └── 计算（向量运算）
+</span><span id="__span-24-5"><a id="__codelineno-24-5" name="__codelineno-24-5" href="#__codelineno-24-5"></a> │
+</span><span id="__span-24-6"><a id="__codelineno-24-6" name="__codelineno-24-6" href="#__codelineno-24-6"></a> ├── Mat（L1 缓冲区）               ← pl.load(..., target_memory=pl.Mem.Mat)
+</span><span id="__span-24-7"><a id="__codelineno-24-7" name="__codelineno-24-7" href="#__codelineno-24-7"></a> │    ├── Left（L0A）               ← pl.move(..., target_memory=pl.Mem.Left)
+</span><span id="__span-24-8"><a id="__codelineno-24-8" name="__codelineno-24-8" href="#__codelineno-24-8"></a> │    └── Right（L0B）              ← pl.move(..., target_memory=pl.Mem.Right)
+</span><span id="__span-24-9"><a id="__codelineno-24-9" name="__codelineno-24-9" href="#__codelineno-24-9"></a> │         └── Acc（L0C）           ← pl.matmul() 结果
+</span><span id="__span-24-10"><a id="__codelineno-24-10" name="__codelineno-24-10" href="#__codelineno-24-10"></a> │              └── DDR             ← pl.store()
+</span></code></pre></div>
+<h3 id="内存空间memoryspace简称-mem">内存空间（MemorySpace，简称 Mem）<a class="headerlink" href="#内存空间memoryspace简称-mem" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>空间</th>
+<th>枚举</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DDR</td>
+<td><code>pl.Mem.DDR</code></td>
+<td>片外全局内存（Tensor 参数）</td>
+</tr>
+<tr>
+<td>Vec</td>
+<td><code>pl.Mem.Vec</code></td>
+<td>统一向量缓冲区（<code>pl.load</code> 默认目标）</td>
+</tr>
+<tr>
+<td>Mat</td>
+<td><code>pl.Mem.Mat</code></td>
+<td>L1 矩阵缓冲区</td>
+</tr>
+<tr>
+<td>Left</td>
+<td><code>pl.Mem.Left</code></td>
+<td>L0A —— 矩阵乘法左操作数</td>
+</tr>
+<tr>
+<td>Right</td>
+<td><code>pl.Mem.Right</code></td>
+<td>L0B —— 矩阵乘法右操作数</td>
+</tr>
+<tr>
+<td>Acc</td>
+<td><code>pl.Mem.Acc</code></td>
+<td>L0C —— 矩阵乘法累加器</td>
+</tr>
+<tr>
+<td>Bias</td>
+<td><code>pl.Mem.Bias</code></td>
+<td>偏置缓冲区（AIC 核心）</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>兼容性说明：</strong> <code>pl.Mem</code> 是 <code>pl.MemorySpace</code> 的简写别名，两者等价，均可使用。</p>
+</blockquote>
+<h3 id="数据搬运操作">数据搬运操作<a class="headerlink" href="#数据搬运操作" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a><span class="n">tile</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">])</span>                              <span class="c1"># DDR → Vec</span>
+</span><span id="__span-25-2"><a id="__codelineno-25-2" name="__codelineno-25-2" href="#__codelineno-25-2"></a><span class="n">tile_l1</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tensor</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="n">target_memory</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Mem</span><span class="o">.</span><span class="n">Mat</span><span class="p">)</span>  <span class="c1"># DDR → Mat</span>
+</span><span id="__span-25-3"><a id="__codelineno-25-3" name="__codelineno-25-3" href="#__codelineno-25-3"></a><span class="n">tile_l0a</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">tile_l1</span><span class="p">,</span> <span class="n">target_memory</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Mem</span><span class="o">.</span><span class="n">Left</span><span class="p">)</span>                <span class="c1"># Mat → Left</span>
+</span><span id="__span-25-4"><a id="__codelineno-25-4" name="__codelineno-25-4" href="#__codelineno-25-4"></a><span class="n">out</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">tile</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">output</span><span class="p">)</span>                                  <span class="c1"># Tile → DDR</span>
+</span></code></pre></div>
+<h3 id="模式矩阵乘法ddr--mat--leftright--acc--ddr">模式：矩阵乘法（DDR → Mat → Left/Right → Acc → DDR）<a class="headerlink" href="#模式矩阵乘法ddr--mat--leftright--acc--ddr" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a><span class="n">a_l1</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="n">target_memory</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Mem</span><span class="o">.</span><span class="n">Mat</span><span class="p">)</span>
+</span><span id="__span-26-2"><a id="__codelineno-26-2" name="__codelineno-26-2" href="#__codelineno-26-2"></a><span class="n">b_l1</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="n">target_memory</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Mem</span><span class="o">.</span><span class="n">Mat</span><span class="p">)</span>
+</span><span id="__span-26-3"><a id="__codelineno-26-3" name="__codelineno-26-3" href="#__codelineno-26-3"></a><span class="n">a_l0a</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">a_l1</span><span class="p">,</span> <span class="n">target_memory</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Mem</span><span class="o">.</span><span class="n">Left</span><span class="p">)</span>
+</span><span id="__span-26-4"><a id="__codelineno-26-4" name="__codelineno-26-4" href="#__codelineno-26-4"></a><span class="n">b_l0b</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">move</span><span class="p">(</span><span class="n">b_l1</span><span class="p">,</span> <span class="n">target_memory</span><span class="o">=</span><span class="n">pl</span><span class="o">.</span><span class="n">Mem</span><span class="o">.</span><span class="n">Right</span><span class="p">)</span>
+</span><span id="__span-26-5"><a id="__codelineno-26-5" name="__codelineno-26-5" href="#__codelineno-26-5"></a><span class="n">c_acc</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">a_l0a</span><span class="p">,</span> <span class="n">b_l0b</span><span class="p">)</span>                     <span class="c1"># 结果 → Acc</span>
+</span><span id="__span-26-6"><a id="__codelineno-26-6" name="__codelineno-26-6" href="#__codelineno-26-6"></a><span class="n">out</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">c_acc</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">output</span><span class="p">)</span>      <span class="c1"># Acc → DDR</span>
+</span></code></pre></div>
+<h2 id="编译">编译<a class="headerlink" href="#编译" title="Permanent link">&para;</a></h2>
+<h3 id="ircompile"><code>ir.compile()</code><a class="headerlink" href="#ircompile" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pypto</span><span class="w"> </span><span class="kn">import</span> <span class="n">ir</span>
+</span><span id="__span-27-2"><a id="__codelineno-27-2" name="__codelineno-27-2" href="#__codelineno-27-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pypto.backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackendType</span>
+</span><span id="__span-27-3"><a id="__codelineno-27-3" name="__codelineno-27-3" href="#__codelineno-27-3"></a>
+</span><span id="__span-27-4"><a id="__codelineno-27-4" name="__codelineno-27-4" href="#__codelineno-27-4"></a><span class="n">output_dir</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+</span><span id="__span-27-5"><a id="__codelineno-27-5" name="__codelineno-27-5" href="#__codelineno-27-5"></a>    <span class="n">program</span><span class="p">,</span>
+</span><span id="__span-27-6"><a id="__codelineno-27-6" name="__codelineno-27-6" href="#__codelineno-27-6"></a>    <span class="n">output_dir</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>                           <span class="c1"># 为 None 时自动生成</span>
+</span><span id="__span-27-7"><a id="__codelineno-27-7" name="__codelineno-27-7" href="#__codelineno-27-7"></a>    <span class="n">strategy</span><span class="o">=</span><span class="n">ir</span><span class="o">.</span><span class="n">OptimizationStrategy</span><span class="o">.</span><span class="n">Default</span><span class="p">,</span>  <span class="c1"># Default 或 PTOAS</span>
+</span><span id="__span-27-8"><a id="__codelineno-27-8" name="__codelineno-27-8" href="#__codelineno-27-8"></a>    <span class="n">dump_passes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>                          <span class="c1"># 每个 pass 后打印 IR</span>
+</span><span id="__span-27-9"><a id="__codelineno-27-9" name="__codelineno-27-9" href="#__codelineno-27-9"></a>    <span class="n">backend_type</span><span class="o">=</span><span class="n">BackendType</span><span class="o">.</span><span class="n">Ascend910B_PTO</span><span class="p">,</span>              <span class="c1"># PTO 或 CCE</span>
+</span><span id="__span-27-10"><a id="__codelineno-27-10" name="__codelineno-27-10" href="#__codelineno-27-10"></a><span class="p">)</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>选项</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>strategy</code></td>
+<td><code>Default</code>、<code>PTOAS</code></td>
+<td><code>Default</code> = 完整流水线含同步插入。<code>PTOAS</code> = PTO 汇编（无调度）</td>
+</tr>
+<tr>
+<td><code>backend_type</code></td>
+<td><code>PTO</code>、<code>CCE</code></td>
+<td>代码生成后端</td>
+</tr>
+<tr>
+<td><code>dump_passes</code></td>
+<td><code>True</code>/<code>False</code></td>
+<td>每个优化 pass 前后打印 IR</td>
+</tr>
+<tr>
+<td><code>skip_ptoas</code></td>
+<td><code>True</code>/<code>False</code></td>
+<td>跳过 PTOAS 步骤，输出原始 MLIR 文件（默认 <code>False</code>）</td>
+</tr>
+<tr>
+<td><code>output_dir</code></td>
+<td>路径或 <code>None</code></td>
+<td>输出目录（<code>None</code> 时自动创建）</td>
+</tr>
+<tr>
+<td><code>verification_level</code></td>
+<td><code>NONE</code>、<code>BASIC</code></td>
+<td>IR 校验级别（默认 <code>BASIC</code>）</td>
+</tr>
+</tbody>
+</table>
+<h3 id="优化流水线">优化流水线<a class="headerlink" href="#优化流水线" title="Permanent link">&para;</a></h3>
+<p><code>Default</code> 策略按顺序运行以下 pass：</p>
+<ol>
+<li><strong>UnrollLoops</strong> —— 展开循环迭代</li>
+<li><strong>ConvertToSSA</strong> —— 转换为静态单赋值形式</li>
+<li><strong>FlattenCallExpr</strong> —— 展平嵌套函数调用</li>
+<li><strong>SplitChunkedLoops</strong> —— 将分块循环拆分为独立循环</li>
+<li><strong>InterchangeChunkLoops</strong> —— 交换分块循环顺序</li>
+<li><strong>OutlineIncoreScopes</strong> —— 将 incore 作用域提取为独立函数</li>
+<li><strong>ConvertTensorToTileOps</strong> —— 将张量操作转换为 tile 操作</li>
+<li><strong>InitMemRef</strong> —— 分配内存空间，插入缓冲区分配</li>
+<li><strong>MemoryReuse</strong> —— 共享生命周期不重叠的缓冲区</li>
+<li><strong>InsertSync</strong> —— 在流水线阶段之间插入同步屏障</li>
+<li><strong>AllocateMemoryAddr</strong> —— 分配具体内存地址</li>
+</ol>
+<h3 id="调试">调试<a class="headerlink" href="#调试" title="Permanent link">&para;</a></h3>
+<p>使用 <code>node.as_python()</code> 查看函数或程序的 IR。传入 <code>concise=True</code> 可省略中间类型标注以获得更清晰的输出。编译时设置 <code>dump_passes=True</code> 以查看每个优化阶段的 IR。</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/pypto" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

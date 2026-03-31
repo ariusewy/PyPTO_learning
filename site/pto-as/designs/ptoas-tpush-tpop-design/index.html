@@ -1,0 +1,6348 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="PyPTO 编译器学习文档 - 整合 pypto、pto-as、pto-isa 三个项目的中文文档">
+      
+      
+        <meta name="author" content="PyPTO Learner">
+      
+      
+      
+        <link rel="prev" href="../../operations/control-flow-ops_zh/">
+      
+      
+        <link rel="next" href="../../../pto-isa/01-overview_zh/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>TPUSH/TPOP 设计 - PyPTO 学习文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#tpushtpop-前端接口与-ptoas-实现设计" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../.." title="PyPTO 学习文档" class="md-header__button md-logo" aria-label="PyPTO 学习文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyPTO 学习文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              TPUSH/TPOP 设计
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../pypto/dev/passes/00-pass_manager/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  PyPTO
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../" class="md-tabs__link">
+          
+  
+  
+    
+  
+  pto-as
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../pto-isa/01-overview_zh/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  pto-isa
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="PyPTO 学习文档" class="md-nav__button md-logo" aria-label="PyPTO 学习文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PyPTO 学习文档
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyPTO
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PyPTO
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/00-pass_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pass 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pass 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/00-pass_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/01-unroll_loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UnrollLoops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/02-ctrl_flow_transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CtrlFlowTransform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/03-convert_to_ssa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ConvertToSSA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/04-flatten_call_expr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FlattenCallExpr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/05-split_chunked_loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SplitChunkedLoops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/06-interchange_chunk_loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InterchangeChunkLoops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/07-outline_incore_scopes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OutlineIncoreScopes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/08-outline_cluster_scopes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OutlineClusterScopes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/10-flatten_tile_nd_to_2d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FlattenTileNdTo2D
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/12-init_memref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InitMemRef
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/15-memory_reuse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MemoryReuse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/14-insert_sync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InsertSync
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/16-utility_passes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utility Passes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/passes/99-verifier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verifier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IR 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IR 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/ir/00-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IR 概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/ir/01-hierarchy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    层级结构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/ir/02-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    类型系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/ir/03-structural_comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    结构对比
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/ir/04-serialization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    序列化
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/ir/05-operators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    操作符
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/ir/06-builder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/ir/07-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codegen 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Codegen 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/codegen/00-pto_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/codegen/01-cce_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CCE Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/codegen/02-orchestration_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestration Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/dev/language/00-python_syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 语法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    参考文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    参考文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6_1" id="__nav_2_6_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO-ISA 参考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PTO-ISA 参考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/reference/pto-isa/00-cluster_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster 架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/reference/pto-isa/01-tpush_tpop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TPUSH/TPOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pypto/reference/pto-isa/02-buffer_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Buffer 管理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pto-as
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    pto-as
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    入门
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    入门
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../01-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO IR 概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../no_npu_compile_only_guide_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    无 NPU 编译指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    参考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    参考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../02-type-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    类型系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../03-enums-attrs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    枚举与属性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../04-operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    操作参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../PTO_IR_manual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    完整 PTO IR 手册
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../05-passes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端 Pass
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    操作详解
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    操作详解
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/README_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/elementwise-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    逐元素操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/tile-scalar-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tile-标量操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/axis-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    轴归约扩展
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/memory-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内存操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/matrix-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    矩阵操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/data-movement-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据搬运
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/complex-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    复杂操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/scalar-arith-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    标量算术
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../operations/control-flow-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    控制流
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设计文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    设计文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TPUSH/TPOP 设计
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TPUSH/TPOP 设计
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-文档范围" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 文档范围
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-设计目标" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 设计目标
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-前端-ir-接口定义" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 前端 IR 接口定义
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 前端 IR 接口定义">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-ptoaic_initialize_pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 pto.aic_initialize_pipe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.1 pto.aic_initialize_pipe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#语义" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        语义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#语法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        语法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-ptoaiv_initialize_pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 pto.aiv_initialize_pipe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 pto.aiv_initialize_pipe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#语义_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        语义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#语法_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        语法
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-前端数据传输接口" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 前端数据传输接口
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.3 前端数据传输接口">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ptotpush_to_aiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.tpush_to_aiv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptotpush_to_aic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.tpush_to_aic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptotpop_from_aic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.tpop_from_aic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptotpop_from_aiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.tpop_from_aiv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptotfree_from_aic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.tfree_from_aic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptotfree_from_aiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.tfree_from_aiv
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-地址提示接口" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 地址提示接口
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.4 地址提示接口">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ptoreserve_buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.reserve_buffer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#结果" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        结果
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptoimport_reserved_buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.import_reserved_buffer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#结果_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        结果
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-前端层约束" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 前端层约束
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-核心约定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 核心约定
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 核心约定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-逻辑-pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 逻辑 pipe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-split-的角色" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 split 的角色
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-slot_size-的定义" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 SLOT_SIZE 的定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-slot_num-规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 SLOT_NUM 规则
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ptoas-内部-ir-接口定义" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. PTOAS 内部 IR 接口定义
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. PTOAS 内部 IR 接口定义">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-ptopipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 !pto.pipe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-ptoinitialize_l2g2l_pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 pto.initialize_l2g2l_pipe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.2 pto.initialize_l2g2l_pipe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#必需属性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        必需属性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#可选属性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        可选属性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#操作数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        操作数
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-ptoinitialize_l2l_pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 pto.initialize_l2l_pipe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.3 pto.initialize_l2l_pipe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#必需属性_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        必需属性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#可选属性_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        可选属性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#操作数_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        操作数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#操作数_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        操作数
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-ptotpush" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 pto.tpush
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-ptodeclare_tile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 pto.declare_tile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-ptotpop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 pto.tpop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-ptotfree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 pto.tfree
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-前端到内部-ir-的-lowering-规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 前端到内部 IR 的 lowering 规则
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 前端到内部 IR 的 lowering 规则">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-初始化接口-lowering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 初始化接口 lowering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 初始化接口 lowering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a2a3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A2/A3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A5
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-dir_mask12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 DIR_MASK=1/2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-dir_mask3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 DIR_MASK=3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-前端数据传输-op-与内部-pipe-的绑定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 前端数据传输 op 与内部 pipe 的绑定
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-数据传输-op-lowering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 数据传输 op lowering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.5 数据传输 op lowering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tpush_to_aiv--tpush_to_aic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tpush_to_aiv / tpush_to_aic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tpop_from_aic--tpop_from_aiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tpop_from_aic / tpop_from_aiv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tfree_from_aic--tfree_from_aiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tfree_from_aic / tfree_from_aiv
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-reserve_buffer-与地址传播" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. reserve_buffer 与地址传播
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. reserve_buffer 与地址传播">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-设计原则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 设计原则
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-使用规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 使用规则
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.2 使用规则">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#c2v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C2V
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v2c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V2C
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-编译路径与地址处理路径" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 编译路径与地址处理路径
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-启用-local-address-planning-的-auto-路径" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 启用 local address planning 的 auto 路径
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-跳过-local-address-planning-的-manual-路径" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 跳过 local address planning 的 manual 路径
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-import_reserved_buffer-规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 import_reserved_buffer 规则
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#77-地址传播-pass-规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7 地址传播 pass 规则
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.7 地址传播 pass 规则">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#771-pass-落点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7.1 pass 落点
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#772-输入假设" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7.2 输入假设
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#773-实现流程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7.3 实现流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#774-结果-ir-形态" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7.4 结果 IR 形态
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#775-失败条件" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7.5 失败条件
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-flag-分配规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. flag 分配规则
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. flag 分配规则">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-总原则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 总原则
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-单向场景" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 单向场景
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-双向场景" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 双向场景
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-与地址传播的关系" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 与地址传播的关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-verifier-规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. verifier 规则
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. verifier 规则">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-前端-verifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 前端 verifier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-内部-ir-verifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 内部 IR verifier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-关于-split-的校验边界" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 关于 split 的校验边界
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-emitc-与-pto-isa-映射" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. EmitC 与 pto-isa 映射
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. EmitC 与 pto-isa 映射">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-初始化-op" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 初始化 op
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-数据传输-op" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 数据传输 op
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-insertsync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 InsertSync
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-编译流程总览" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 编译流程总览
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pto-isa
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    pto-isa
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/01-overview_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/02-machine-model_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    机器模型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/03-state-and-types_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    状态与类型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/04-tiles-and-globaltensor_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tile 与 GlobalTensor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/05-synchronization_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    同步机制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/06-assembly_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    汇编语言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/07-instructions_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指令集
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/08-programming_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    编程指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/09-virtual-isa-and-ir_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    虚拟 ISA 与 IR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/10-bytecode-and-toolchain_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    字节码与工具链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/11-memory-ordering-and-consistency_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内存顺序与一致性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/12-backend-profiles-and-conformance_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端配置与一致性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_13" id="__nav_4_13_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    附录
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    附录
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/appendix-a-glossary_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    术语表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/appendix-b-instruction-contract-template_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指令契约模板
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/appendix-c-diagnostics-taxonomy_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    诊断分类
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../pto-isa/appendix-d-instruction-family-matrix_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指令族矩阵
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-文档范围" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. 文档范围
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-设计目标" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. 设计目标
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-前端-ir-接口定义" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. 前端 IR 接口定义
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. 前端 IR 接口定义">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-ptoaic_initialize_pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 pto.aic_initialize_pipe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.1 pto.aic_initialize_pipe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#语义" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        语义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#语法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        语法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-ptoaiv_initialize_pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 pto.aiv_initialize_pipe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.2 pto.aiv_initialize_pipe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#语义_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        语义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#语法_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        语法
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#33-前端数据传输接口" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.3 前端数据传输接口
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.3 前端数据传输接口">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ptotpush_to_aiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.tpush_to_aiv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptotpush_to_aic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.tpush_to_aic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptotpop_from_aic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.tpop_from_aic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptotpop_from_aiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.tpop_from_aiv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptotfree_from_aic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.tfree_from_aic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptotfree_from_aiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.tfree_from_aiv
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#34-地址提示接口" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.4 地址提示接口
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3.4 地址提示接口">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ptoreserve_buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.reserve_buffer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#结果" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        结果
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ptoimport_reserved_buffer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pto.import_reserved_buffer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#结果_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        结果
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#35-前端层约束" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.5 前端层约束
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-核心约定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. 核心约定
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. 核心约定">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-逻辑-pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 逻辑 pipe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-split-的角色" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 split 的角色
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-slot_size-的定义" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 SLOT_SIZE 的定义
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-slot_num-规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 SLOT_NUM 规则
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-ptoas-内部-ir-接口定义" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. PTOAS 内部 IR 接口定义
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. PTOAS 内部 IR 接口定义">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-ptopipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 !pto.pipe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-ptoinitialize_l2g2l_pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 pto.initialize_l2g2l_pipe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.2 pto.initialize_l2g2l_pipe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#必需属性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        必需属性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#可选属性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        可选属性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#操作数" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        操作数
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-ptoinitialize_l2l_pipe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 pto.initialize_l2l_pipe
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5.3 pto.initialize_l2l_pipe">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#必需属性_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        必需属性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#可选属性_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        可选属性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#操作数_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        操作数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#操作数_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        操作数
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-ptotpush" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 pto.tpush
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-ptodeclare_tile" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 pto.declare_tile
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#56-ptotpop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.6 pto.tpop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#57-ptotfree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.7 pto.tfree
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-前端到内部-ir-的-lowering-规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. 前端到内部 IR 的 lowering 规则
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. 前端到内部 IR 的 lowering 规则">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-初始化接口-lowering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 初始化接口 lowering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.1 初始化接口 lowering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a2a3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A2/A3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A5
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-dir_mask12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 DIR_MASK=1/2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-dir_mask3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 DIR_MASK=3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-前端数据传输-op-与内部-pipe-的绑定" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 前端数据传输 op 与内部 pipe 的绑定
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#65-数据传输-op-lowering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.5 数据传输 op lowering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6.5 数据传输 op lowering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tpush_to_aiv--tpush_to_aic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tpush_to_aiv / tpush_to_aic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tpop_from_aic--tpop_from_aiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tpop_from_aic / tpop_from_aiv
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tfree_from_aic--tfree_from_aiv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        tfree_from_aic / tfree_from_aiv
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-reserve_buffer-与地址传播" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. reserve_buffer 与地址传播
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7. reserve_buffer 与地址传播">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#71-设计原则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.1 设计原则
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#72-使用规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.2 使用规则
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.2 使用规则">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#c2v" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        C2V
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#v2c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        V2C
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#73-编译路径与地址处理路径" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.3 编译路径与地址处理路径
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#74-启用-local-address-planning-的-auto-路径" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.4 启用 local address planning 的 auto 路径
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#75-跳过-local-address-planning-的-manual-路径" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.5 跳过 local address planning 的 manual 路径
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#76-import_reserved_buffer-规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.6 import_reserved_buffer 规则
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#77-地址传播-pass-规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7 地址传播 pass 规则
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="7.7 地址传播 pass 规则">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#771-pass-落点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7.1 pass 落点
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#772-输入假设" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7.2 输入假设
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#773-实现流程" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7.3 实现流程
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#774-结果-ir-形态" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7.4 结果 IR 形态
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#775-失败条件" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7.7.5 失败条件
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-flag-分配规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. flag 分配规则
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. flag 分配规则">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#81-总原则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.1 总原则
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#82-单向场景" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.2 单向场景
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#83-双向场景" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.3 双向场景
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#84-与地址传播的关系" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8.4 与地址传播的关系
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-verifier-规则" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. verifier 规则
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. verifier 规则">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-前端-verifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 前端 verifier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-内部-ir-verifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 内部 IR verifier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-关于-split-的校验边界" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 关于 split 的校验边界
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-emitc-与-pto-isa-映射" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. EmitC 与 pto-isa 映射
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. EmitC 与 pto-isa 映射">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#101-初始化-op" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.1 初始化 op
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#102-数据传输-op" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.2 数据传输 op
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#103-insertsync" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10.3 InsertSync
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-编译流程总览" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. 编译流程总览
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="tpushtpop-前端接口与-ptoas-实现设计">TPUSH/TPOP 前端接口与 PTOAS 实现设计<a class="headerlink" href="#tpushtpop-前端接口与-ptoas-实现设计" title="Permanent link">&para;</a></h1>
+<h2 id="1-文档范围">1. 文档范围<a class="headerlink" href="#1-文档范围" title="Permanent link">&para;</a></h2>
+<p>本文定义PTOAS TPUSH/TPOP 前端IR接口，以及其在 PTOAS 内部的 lowering、地址传播、flag 分配和 EmitC 映射规则。</p>
+<p>本文覆盖两层接口：</p>
+<ul>
+<li>前端接口</li>
+<li><code>pto.aic_initialize_pipe</code></li>
+<li><code>pto.aiv_initialize_pipe</code></li>
+<li><code>pto.tpush_to_aiv</code></li>
+<li><code>pto.tpush_to_aic</code></li>
+<li><code>pto.tpop_from_aic</code></li>
+<li><code>pto.tpop_from_aiv</code></li>
+<li><code>pto.tfree_from_aic</code></li>
+<li><code>pto.tfree_from_aiv</code></li>
+<li><code>pto.reserve_buffer</code></li>
+<li><code>pto.import_reserved_buffer</code></li>
+<li>PTOAS 内部统一接口</li>
+<li><code>pto.initialize_l2g2l_pipe</code></li>
+<li><code>pto.initialize_l2l_pipe</code></li>
+<li><code>pto.tpush</code></li>
+<li><code>pto.declare_tile</code></li>
+<li><code>pto.tpop</code></li>
+<li><code>pto.tfree</code></li>
+</ul>
+<p>本文只描述接口契约与编译流程，不展开具体 C++ 模板实现细节。</p>
+<h2 id="2-设计目标">2. 设计目标<a class="headerlink" href="#2-设计目标" title="Permanent link">&para;</a></h2>
+<p>本设计的目标如下：</p>
+<ul>
+<li>对前端提供*_initialize_pipe/tpush_to_*/tpop_from_*/tfree_from_*IR接口。</li>
+<li>在 PTOAS 内部统一为 pipe/tpush/tpop/tfree 指令，便于复用已有 pass。</li>
+<li>支持 A2/A3 与 A5 两个平台使用同一套前端接口。</li>
+<li>定义consumer slot buffer的分配地址与producer之间的匹配关系，并传播。</li>
+</ul>
+<h2 id="3-前端-ir-接口定义">3. 前端 IR 接口定义<a class="headerlink" href="#3-前端-ir-接口定义" title="Permanent link">&para;</a></h2>
+<h3 id="31-ptoaic_initialize_pipe">3.1 <code>pto.aic_initialize_pipe</code><a class="headerlink" href="#31-ptoaic_initialize_pipe" title="Permanent link">&para;</a></h3>
+<h4 id="语义">语义<a class="headerlink" href="#语义" title="Permanent link">&para;</a></h4>
+<p>由 Cube kernel 在函数启动时调用，初始化该函数涉及的通信 pipe。</p>
+<h4 id="语法">语法<a class="headerlink" href="#语法" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>pto.aic_initialize_pipe(
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    DIR_MASK,
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    SLOT_SIZE,
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    GM_SLOT_BUFFER,
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    C2V_CONSUMER_BUF,
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>    V2C_CONSUMER_BUF)
+</span></code></pre></div>
+<h4 id="参数">参数<a class="headerlink" href="#参数" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DIR_MASK</code></td>
+<td>编译期整数常量</td>
+<td><code>1</code>、<code>2</code> 或 <code>3</code></td>
+</tr>
+<tr>
+<td><code>SLOT_SIZE</code></td>
+<td>编译期整数常量</td>
+<td>单 slot 字节数，定义为切分前完整 tile 字节数</td>
+</tr>
+<tr>
+<td><code>GM_SLOT_BUFFER</code></td>
+<td><code>!pto.ptr&lt;T&gt;</code> 或空值</td>
+<td>A2/A3 路径使用的 GM 指针，A5 路径为空</td>
+</tr>
+<tr>
+<td><code>C2V_CONSUMER_BUF</code></td>
+<td><code>i32</code></td>
+<td>C2V 方向 consumer 的 local slot buffer 基址</td>
+</tr>
+<tr>
+<td><code>V2C_CONSUMER_BUF</code></td>
+<td><code>i32</code></td>
+<td>V2C 方向 consumer 的 local slot buffer 基址</td>
+</tr>
+</tbody>
+</table>
+<h3 id="32-ptoaiv_initialize_pipe">3.2 <code>pto.aiv_initialize_pipe</code><a class="headerlink" href="#32-ptoaiv_initialize_pipe" title="Permanent link">&para;</a></h3>
+<h4 id="语义_1">语义<a class="headerlink" href="#语义_1" title="Permanent link">&para;</a></h4>
+<p>由 Vector kernel 在函数启动时调用，初始化该函数涉及的通信 pipe。</p>
+<h4 id="语法_1">语法<a class="headerlink" href="#语法_1" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>pto.aiv_initialize_pipe(
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    DIR_MASK,
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    SLOT_SIZE,
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    GM_SLOT_BUFFER,
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    C2V_CONSUMER_BUF,
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>    V2C_CONSUMER_BUF)
+</span></code></pre></div>
+<p>参数语义与 <code>pto.aic_initialize_pipe</code> 相同。</p>
+<h3 id="33-前端数据传输接口">3.3 前端数据传输接口<a class="headerlink" href="#33-前端数据传输接口" title="Permanent link">&para;</a></h3>
+<h4 id="ptotpush_to_aiv"><code>pto.tpush_to_aiv</code><a class="headerlink" href="#ptotpush_to_aiv" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>pto.tpush_to_aiv(%tile) { split = 0 }
+</span></code></pre></div>
+<ul>
+<li>仅出现在 Cube kernel 中</li>
+<li>表示 C2V 方向 producer push</li>
+</ul>
+<h4 id="ptotpush_to_aic"><code>pto.tpush_to_aic</code><a class="headerlink" href="#ptotpush_to_aic" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pto.tpush_to_aic(%tile) { split = 0 }
+</span></code></pre></div>
+<ul>
+<li>仅出现在 Vector kernel 中</li>
+<li>表示 V2C 方向 producer push</li>
+</ul>
+<h4 id="ptotpop_from_aic"><code>pto.tpop_from_aic</code><a class="headerlink" href="#ptotpop_from_aic" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>%tile = pto.tpop_from_aic { split = 0 } -&gt; !pto.tile_buf&lt;...&gt;
+</span></code></pre></div>
+<ul>
+<li>仅出现在 Vector kernel 中</li>
+<li>表示 C2V 方向 consumer pop</li>
+</ul>
+<h4 id="ptotpop_from_aiv"><code>pto.tpop_from_aiv</code><a class="headerlink" href="#ptotpop_from_aiv" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>%tile = pto.tpop_from_aiv { split = 0 } -&gt; !pto.tile_buf&lt;...&gt;
+</span></code></pre></div>
+<ul>
+<li>仅出现在 Cube kernel 中</li>
+<li>表示 V2C 方向 consumer pop</li>
+</ul>
+<h4 id="ptotfree_from_aic"><code>pto.tfree_from_aic</code><a class="headerlink" href="#ptotfree_from_aic" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>pto.tfree_from_aic { split = 0 }
+</span></code></pre></div>
+<ul>
+<li>仅出现在 Vector kernel 中</li>
+<li>表示 C2V 方向 consumer free</li>
+</ul>
+<h4 id="ptotfree_from_aiv"><code>pto.tfree_from_aiv</code><a class="headerlink" href="#ptotfree_from_aiv" title="Permanent link">&para;</a></h4>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pto.tfree_from_aiv { split = 0 }
+</span></code></pre></div>
+<ul>
+<li>仅出现在 Cube kernel 中</li>
+<li>表示 V2C 方向 consumer free</li>
+</ul>
+<p>以上前端数据传输接口中的 <code>split</code> 均为编译期常量属性，不是运行时 SSA operand。</p>
+<ul>
+<li>取值使用 <code>TileSplitAxis</code> 枚举语义：<code>0/1/2</code> 分别对应 <code>TILE_NO_SPLIT</code>、<code>TILE_UP_DOWN</code>、<code>TILE_LEFT_RIGHT</code></li>
+<li>lowering 到 PTOAS 内部 IR 时，<code>split</code> 继续以属性形式保留</li>
+</ul>
+<h3 id="34-地址提示接口">3.4 地址提示接口<a class="headerlink" href="#34-地址提示接口" title="Permanent link">&para;</a></h3>
+<h4 id="ptoreserve_buffer"><code>pto.reserve_buffer</code><a class="headerlink" href="#ptoreserve_buffer" title="Permanent link">&para;</a></h4>
+<p>用于在当前函数内声明一块 consumer slot buffer 预留空间。其合法写法由
+当前编译流程是否启用 local address planning 决定。</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>%buf = pto.reserve_buffer {
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>    name = &quot;c2v_slot_buffer&quot;,
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>    size = 2048,
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>    location = #pto.address_space&lt;vec&gt;,
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>    auto = true
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>} -&gt; i32
+</span></code></pre></div>
+<p>或使用显式地址：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>%buf = pto.reserve_buffer {
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    name = &quot;c2v_slot_buffer&quot;,
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    size = 2048,
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    location = #pto.address_space&lt;vec&gt;,
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>    auto = false,
+</span><span id="__span-9-6"><a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a>    base = 4096
+</span><span id="__span-9-7"><a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a>} -&gt; i32
+</span></code></pre></div>
+<h4 id="参数_1">参数<a class="headerlink" href="#参数_1" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>字符串属性</td>
+<td>本函数内唯一的预留段名字</td>
+</tr>
+<tr>
+<td><code>size</code></td>
+<td>整数属性</td>
+<td>预留字节数</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>地址空间属性</td>
+<td>预留空间所在 local 地址空间</td>
+</tr>
+<tr>
+<td><code>auto</code></td>
+<td><code>bool</code> 属性</td>
+<td>地址解析路径标志；<code>true</code> 表示地址由 PTOAS 地址规划路径分配，<code>false</code> 表示地址已在输入 IR 中显式给定</td>
+</tr>
+<tr>
+<td><code>base</code></td>
+<td>可选整数属性</td>
+<td>显式起始地址；仅 manual 路径使用</td>
+</tr>
+</tbody>
+</table>
+<h4 id="结果">结果<a class="headerlink" href="#结果" title="Permanent link">&para;</a></h4>
+<ul>
+<li>结果类型为 <code>i32</code></li>
+<li>结果值表示该 buffer 当前可用的基址</li>
+<li>当前可用基址可来自显式 <code>base</code>，也可来自 plan memory 回填后的解析地址</li>
+<li>在当前约束下，每个函数最多一条 <code>reserve_buffer</code></li>
+<li>编译路径与 <code>auto</code> 的合法组合只有两种：</li>
+<li>启用 local address planning：<code>auto = true</code>，且不带 <code>base</code></li>
+<li>跳过 local address planning：<code>auto = false</code>，且显式提供 <code>base</code></li>
+</ul>
+<h4 id="ptoimport_reserved_buffer"><code>pto.import_reserved_buffer</code><a class="headerlink" href="#ptoimport_reserved_buffer" title="Permanent link">&para;</a></h4>
+<p>用于引用 peer function 中已经定义的 <code>reserve_buffer</code> 结果。</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>%buf = pto.import_reserved_buffer {
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>    name = &quot;c2v_slot_buffer&quot;,
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>    peer_func = @vector_kernel
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>} -&gt; i32
+</span></code></pre></div>
+<h4 id="参数_2">参数<a class="headerlink" href="#参数_2" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td>字符串属性</td>
+<td>peer 侧 <code>reserve_buffer</code> 的名字</td>
+</tr>
+<tr>
+<td><code>peer_func</code></td>
+<td>symbol ref</td>
+<td>peer 函数符号</td>
+</tr>
+</tbody>
+</table>
+<h4 id="结果_1">结果<a class="headerlink" href="#结果_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li>结果类型为 <code>i32</code></li>
+<li>结果值表示从 peer <code>reserve_buffer</code> 导入的已解析基址</li>
+</ul>
+<h3 id="35-前端层约束">3.5 前端层约束<a class="headerlink" href="#35-前端层约束" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>约束来源说明</strong>：以下约束是当前软件方案的设计选择，而非硬件限制。
+当前 <code>tpush_to_aic</code> / <code>tpush_to_aiv</code> / <code>tpop_from_aic</code> / <code>tpop_from_aiv</code> /
+<code>tfree_from_aic</code> / <code>tfree_from_aiv</code> 等前端接口上不携带 pipe 参数，因此在
+lowering 时只能将函数内的所有 push/pop/free 绑定到同一条 pipe。这决定了每个
+函数最多只能存在一条初始化语句（即一条 pipe）。如果后续需要支持多条 pipe 并行
+通信，前端接口方案需要重新设计（例如在 push/pop/free 上显式引用 pipe handle）。</p>
+</blockquote>
+<p>前端 IR 需满足以下约束：</p>
+<ul>
+<li>每个 Cube function 最多一条 <code>pto.aic_initialize_pipe</code></li>
+<li>每个 Vector function 最多一条 <code>pto.aiv_initialize_pipe</code></li>
+<li>每个函数内最多一条 C2V 逻辑 pipe 和一条 V2C 逻辑 pipe</li>
+<li>每个函数最多一条 <code>reserve_buffer</code></li>
+<li>每个函数最多一条 <code>import_reserved_buffer</code></li>
+<li><code>DIR_MASK</code> 只允许 <code>1</code>、<code>2</code>、<code>3</code></li>
+<li><code>SLOT_SIZE &gt; 0</code></li>
+<li><code>reserve_buffer.size == SLOT_SIZE * SLOT_NUM</code></li>
+<li>C2V consumer 的 <code>reserve_buffer.location</code> 必须是 <code>VEC</code></li>
+<li>V2C consumer 的 <code>reserve_buffer.location</code> 必须是 <code>MAT</code></li>
+<li><code>reserve_buffer.name</code> 在本函数内必须唯一</li>
+<li>op 级约束：<code>reserve_buffer.auto = false</code> 时必须提供 <code>base</code></li>
+<li>op 级约束：<code>reserve_buffer.auto = true</code> 时必须不提供 <code>base</code></li>
+<li>启用 local address planning 的编译流程：<code>reserve_buffer</code> 只允许 <code>auto = true</code></li>
+<li>跳过 local address planning 的编译流程：<code>reserve_buffer</code> 只允许 <code>auto = false</code> 且显式提供 <code>base</code></li>
+<li><code>import_reserved_buffer</code> 必须能在 <code>peer_func</code> 中找到同名 <code>reserve_buffer</code></li>
+</ul>
+<h2 id="4-核心约定">4. 核心约定<a class="headerlink" href="#4-核心约定" title="Permanent link">&para;</a></h2>
+<h3 id="41-逻辑-pipe">4.1 逻辑 pipe<a class="headerlink" href="#41-逻辑-pipe" title="Permanent link">&para;</a></h3>
+<p>本文中的”逻辑 pipe”指一条通信通道。</p>
+<ul>
+<li>C2V：Cube producer -&gt; Vector consumer</li>
+<li>V2C：Vector producer -&gt; Cube consumer</li>
+</ul>
+<p><code>DIR_MASK=3</code> 表示前端一个同时包含 C2V 和 V2C 的初始化请求。在 PTOAS lowering
+后，生成单条 <code>dir_mask = 3</code> 的 DIR_BOTH 内部 pipe，同时承载 C2V 和 V2C 双向
+通信。该 pipe 携带两个地址操作数：<code>local_addr</code>（C2V consumer buf）和
+<code>peer_local_addr</code>（V2C consumer buf）。下游 TPUSH/TPOP/TFREE 共享同一 pipe
+handle。</p>
+<h3 id="42-split-的角色">4.2 <code>split</code> 的角色<a class="headerlink" href="#42-split-的角色" title="Permanent link">&para;</a></h3>
+<p><code>split</code> 使用 <code>TileSplitAxis</code> 枚举表达：</p>
+<ul>
+<li><code>TILE_NO_SPLIT</code></li>
+<li><code>TILE_UP_DOWN</code></li>
+<li><code>TILE_LEFT_RIGHT</code></li>
+</ul>
+<p>在 PTOAS 设计中，<code>split</code> 的角色定义为：</p>
+<ul>
+<li><code>split</code> 是 <code>tpush/tpop/tfree</code> 的逐指令执行模式</li>
+<li><code>split</code> 在 IR 中表示为编译期常量属性，不是运行时 SSA operand</li>
+<li><code>split</code> 不参与pipe 初始化</li>
+<li><code>split</code> 不参与 plan memory、地址传播、flag 分配</li>
+<li>PTOAS 将 <code>split</code> 作为透明的编译期参数向 EmitC 和底层 pto-isa 透传</li>
+</ul>
+<p>因此：</p>
+<ul>
+<li>同一条逻辑 pipe 上可以出现不同 <code>split</code> 的 <code>tpush/tpop/tfree</code></li>
+<li>PTOAS 不要求同一逻辑 pipe 内所有指令使用同一个 <code>split</code></li>
+<li><code>split</code> 相关的语义正确性由前端生成逻辑或前端 verifier 保证；PTOAS 仅校验 <code>split</code> 枚举合法并向下透传</li>
+</ul>
+<h3 id="43-slot_size-的定义">4.3 <code>SLOT_SIZE</code> 的定义<a class="headerlink" href="#43-slot_size-的定义" title="Permanent link">&para;</a></h3>
+<p><code>SLOT_SIZE</code> 的定义固定为：</p>
+<ul>
+<li>切分前完整 tile 的字节数</li>
+</ul>
+<p>即使 <code>split</code> 为 <code>TILE_UP_DOWN</code> 或 <code>TILE_LEFT_RIGHT</code>，<code>SLOT_SIZE</code> 仍然表示未切分前的逻辑 tile 总字节数。</p>
+<p><code>split</code> 只影响底层 <code>TPUSH/TPOP/TFREE</code> 的执行方式，不影响 <code>SLOT_SIZE</code> 的含义。</p>
+<h3 id="44-slot_num-规则">4.4 <code>SLOT_NUM</code> 规则<a class="headerlink" href="#44-slot_num-规则" title="Permanent link">&para;</a></h3>
+<p><code>SLOT_NUM</code> 由 <code>DIR_MASK</code> 固定决定：</p>
+<ul>
+<li><code>DIR_MASK = 1</code> 或 <code>2</code>：<code>SLOT_NUM = 8</code></li>
+<li><code>DIR_MASK = 3</code>（DIR_BOTH）：单条 pipe，<code>SLOT_NUM = 4</code>（每方向 4 slot，总缓冲 2 × 4 × SLOT_SIZE）</li>
+</ul>
+<p><code>SLOT_NUM</code> 不由 <code>split</code> 决定。</p>
+<h2 id="5-ptoas-内部-ir-接口定义">5. PTOAS 内部 IR 接口定义<a class="headerlink" href="#5-ptoas-内部-ir-接口定义" title="Permanent link">&para;</a></h2>
+<h3 id="51-ptopipe">5.1 <code>!pto.pipe</code><a class="headerlink" href="#51-ptopipe" title="Permanent link">&para;</a></h3>
+<p>本文设计的内部 <code>!pto.pipe</code> 为不透明 handle。</p>
+<p><code>!pto.pipe</code> 的协议信息由其定义 op 上的属性承载，而不是由 type 参数承载。</p>
+<p>底层 <code>pto-isa</code> 若对 <code>TPUSH/TPOP</code> 的模板形态继续演进，不反向约束 <code>!pto.pipe</code> 的 type 设计；内部 <code>!pto.pipe</code> 仍保持 opaque handle。</p>
+<h3 id="52-ptoinitialize_l2g2l_pipe">5.2 <code>pto.initialize_l2g2l_pipe</code><a class="headerlink" href="#52-ptoinitialize_l2g2l_pipe" title="Permanent link">&para;</a></h3>
+<p>用于 A2/A3 路径。</p>
+<p>单向示例：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>%pipe = pto.initialize_l2g2l_pipe {
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>    dir_mask = 1,
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    slot_size = 512,
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    slot_num = 8,
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    local_slot_num = 8
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>}(%gm_addr : i32, %local_addr : i32) -&gt; !pto.pipe
+</span></code></pre></div>
+<p>DIR_BOTH 示例：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>%pipe = pto.initialize_l2g2l_pipe {
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>    dir_mask = 3,
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>    slot_size = 512,
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>    slot_num = 4,
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    local_slot_num = 4
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>}(%gm_addr : i32, %c2v_addr : i32, %v2c_addr : i32) -&gt; !pto.pipe
+</span></code></pre></div>
+<h4 id="必需属性">必需属性<a class="headerlink" href="#必需属性" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>dir_mask</code></li>
+<li><code>slot_size</code></li>
+<li><code>slot_num</code></li>
+</ul>
+<h4 id="可选属性">可选属性<a class="headerlink" href="#可选属性" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>local_slot_num</code></li>
+<li>仅 <code>initialize_l2g2l_pipe</code> 承载</li>
+<li>表示 GM 路径下 consumer 侧 local slot buffer 的槽数</li>
+<li>仅在通过 GM 传递时对底层 <code>TPipe</code> 模板参数有意义，不改变 GM FIFO 的 <code>slot_num</code></li>
+<li>缺省值等于该内部 pipe 的 <code>slot_num</code></li>
+<li>因此当前固定规则下：<ul>
+<li><code>DIR_MASK=1/2</code> 直接 lowering 时，<code>local_slot_num = 8</code></li>
+<li><code>DIR_MASK=3</code> 单条 DIR_BOTH pipe，<code>local_slot_num = 4</code></li>
+</ul>
+</li>
+<li><code>flag_base</code></li>
+<li>由 PTOAS flag 分配阶段填写</li>
+<li>frontend lowering 阶段可以缺省</li>
+<li>EmitC 前必须已经解析为显式常量</li>
+</ul>
+<h4 id="操作数">操作数<a class="headerlink" href="#操作数" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>gm_addr</code></li>
+<li><code>local_addr</code>：C2V consumer buf（或单向时唯一方向的 consumer buf）</li>
+<li><code>peer_local_addr</code>（可选）：V2C consumer buf，仅 <code>dir_mask = 3</code> 时出现</li>
+</ul>
+<h3 id="53-ptoinitialize_l2l_pipe">5.3 <code>pto.initialize_l2l_pipe</code><a class="headerlink" href="#53-ptoinitialize_l2l_pipe" title="Permanent link">&para;</a></h3>
+<p>用于 A5 路径。</p>
+<p>单向示例：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>%pipe = pto.initialize_l2l_pipe {
+</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>    dir_mask = 1,
+</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>    slot_size = 512,
+</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a>    slot_num = 8
+</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>}(%local_addr : i32) -&gt; !pto.pipe
+</span></code></pre></div>
+<p>双向（DIR_BOTH）示例：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>%pipe = pto.initialize_l2l_pipe {
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>    dir_mask = 3,
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>    slot_size = 1024,
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>    slot_num = 4
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>}(%c2v_addr : i32, %v2c_addr : i32) -&gt; !pto.pipe
+</span></code></pre></div>
+<h4 id="必需属性_1">必需属性<a class="headerlink" href="#必需属性_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>dir_mask</code>：合法值 <code>1</code>（C2V）、<code>2</code>（V2C）、<code>3</code>（DIR_BOTH）</li>
+<li><code>slot_size</code></li>
+<li><code>slot_num</code></li>
+</ul>
+<h4 id="可选属性_1">可选属性<a class="headerlink" href="#可选属性_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>flag_base</code></li>
+<li>由 PTOAS flag 分配阶段填写</li>
+<li>frontend lowering 阶段可以缺省</li>
+<li>EmitC 前必须已经解析为显式常量</li>
+</ul>
+<h4 id="操作数_1">操作数<a class="headerlink" href="#操作数_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>local_addr</code>：C2V consumer buf（或单向时唯一方向的 consumer buf）</li>
+<li><code>peer_local_addr</code>（可选）：V2C consumer buf，仅 <code>dir_mask = 3</code> 时出现</li>
+</ul>
+<h4 id="操作数_2">操作数<a class="headerlink" href="#操作数_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>local_addr</code></li>
+</ul>
+<h3 id="54-ptotpush">5.4 <code>pto.tpush</code><a class="headerlink" href="#54-ptotpush" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>pto.tpush(%tile, %pipe) { split = 0 }
+</span></code></pre></div>
+<h3 id="55-ptodeclare_tile">5.5 <code>pto.declare_tile</code><a class="headerlink" href="#55-ptodeclare_tile" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>%tile = pto.declare_tile -&gt; !pto.tile_buf&lt;...&gt;
+</span></code></pre></div>
+<h3 id="56-ptotpop">5.6 <code>pto.tpop</code><a class="headerlink" href="#56-ptotpop" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>pto.tpop(%tile, %pipe) { split = 0 }
+</span></code></pre></div>
+<h3 id="57-ptotfree">5.7 <code>pto.tfree</code><a class="headerlink" href="#57-ptotfree" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>pto.tfree(%pipe) { split = 0 }
+</span></code></pre></div>
+<p><code>split</code> 在内部 IR 中必须以编译期常量属性形式保留，不能在 lowering 时擦除或降为运行时 operand。</p>
+<h2 id="6-前端到内部-ir-的-lowering-规则">6. 前端到内部 IR 的 lowering 规则<a class="headerlink" href="#6-前端到内部-ir-的-lowering-规则" title="Permanent link">&para;</a></h2>
+<h3 id="61-初始化接口-lowering">6.1 初始化接口 lowering<a class="headerlink" href="#61-初始化接口-lowering" title="Permanent link">&para;</a></h3>
+<h4 id="a2a3">A2/A3<a class="headerlink" href="#a2a3" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>pto.aic_initialize_pipe</code> 和 <code>pto.aiv_initialize_pipe</code> lower 为 <code>pto.initialize_l2g2l_pipe</code></li>
+<li>若前端未提供更具体信息，lowering 默认补上 <code>local_slot_num = slot_num</code></li>
+</ul>
+<h4 id="a5">A5<a class="headerlink" href="#a5" title="Permanent link">&para;</a></h4>
+<ul>
+<li><code>pto.aic_initialize_pipe</code> 和 <code>pto.aiv_initialize_pipe</code> lower 为 <code>pto.initialize_l2l_pipe</code></li>
+</ul>
+<h3 id="62-dir_mask12">6.2 <code>DIR_MASK=1/2</code><a class="headerlink" href="#62-dir_mask12" title="Permanent link">&para;</a></h3>
+<ul>
+<li>只生成一条内部 pipe</li>
+<li><code>slot_num = 8</code></li>
+<li>对 <code>initialize_l2g2l_pipe</code>，<code>local_slot_num = 8</code></li>
+</ul>
+<h3 id="63-dir_mask3">6.3 <code>DIR_MASK=3</code><a class="headerlink" href="#63-dir_mask3" title="Permanent link">&para;</a></h3>
+<p>前端一个 init op 生成**单条** DIR_BOTH 内部 pipe：</p>
+<ul>
+<li><code>%pipe</code>：<code>dir_mask = 3</code>，<code>slot_num = 4</code></li>
+<li>若 lowering 为 <code>initialize_l2g2l_pipe</code>，<code>local_slot_num = 4</code></li>
+</ul>
+<p>地址选择规则：</p>
+<ul>
+<li><code>local_addr</code> = <code>C2V_CONSUMER_BUF</code></li>
+<li><code>peer_local_addr</code> = <code>V2C_CONSUMER_BUF</code></li>
+</ul>
+<p><code>FrontendPipeHandles</code> 中 <code>c2vPipe</code> 和 <code>v2cPipe</code> 指向同一个 pipe Value。</p>
+<h3 id="64-前端数据传输-op-与内部-pipe-的绑定">6.4 前端数据传输 op 与内部 pipe 的绑定<a class="headerlink" href="#64-前端数据传输-op-与内部-pipe-的绑定" title="Permanent link">&para;</a></h3>
+<p>绑定规则固定如下：</p>
+<table>
+<thead>
+<tr>
+<th>前端 op</th>
+<th>所在函数</th>
+<th>方向</th>
+<th>使用的内部 pipe</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tpush_to_aiv</code></td>
+<td>Cube</td>
+<td>C2V</td>
+<td><code>c2vPipe</code></td>
+</tr>
+<tr>
+<td><code>tpop_from_aic</code></td>
+<td>Vector</td>
+<td>C2V</td>
+<td><code>c2vPipe</code></td>
+</tr>
+<tr>
+<td><code>tfree_from_aic</code></td>
+<td>Vector</td>
+<td>C2V</td>
+<td><code>c2vPipe</code></td>
+</tr>
+<tr>
+<td><code>tpush_to_aic</code></td>
+<td>Vector</td>
+<td>V2C</td>
+<td><code>v2cPipe</code></td>
+</tr>
+</tbody>
+</table>
+<p>当 <code>DIR_MASK=3</code> 时，<code>c2vPipe</code> 和 <code>v2cPipe</code> 指向同一个 DIR_BOTH pipe，下游 TPUSH/TPOP/TFREE 只关心 pipe handle 是否存在，不关心是否是同一个。
+| <code>tpop_from_aiv</code> | Cube | V2C | <code>dir_mask = 2</code> |
+| <code>tfree_from_aiv</code> | Cube | V2C | <code>dir_mask = 2</code> |</p>
+<h3 id="65-数据传输-op-lowering">6.5 数据传输 op lowering<a class="headerlink" href="#65-数据传输-op-lowering" title="Permanent link">&para;</a></h3>
+<h4 id="tpush_to_aiv--tpush_to_aic"><code>tpush_to_aiv</code> / <code>tpush_to_aic</code><a class="headerlink" href="#tpush_to_aiv--tpush_to_aic" title="Permanent link">&para;</a></h4>
+<p>lower 为：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>pto.tpush(%tile, %pipe) { split = 0 }
+</span></code></pre></div>
+<h4 id="tpop_from_aic--tpop_from_aiv"><code>tpop_from_aic</code> / <code>tpop_from_aiv</code><a class="headerlink" href="#tpop_from_aic--tpop_from_aiv" title="Permanent link">&para;</a></h4>
+<p>lower 为：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>%decl = pto.declare_tile -&gt; !pto.tile_buf&lt;...&gt;
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>pto.tpop(%decl, %pipe) { split = 0 }
+</span></code></pre></div>
+<p>即：</p>
+<ul>
+<li>前端 <code>pto.tpop_from_aic</code> / <code>pto.tpop_from_aiv</code> 是返回 tile 结果值的接口</li>
+<li>PTOAS 内部 <code>pto.tpop</code> 才是 destination-style 形式，显式接收一个 <code>pto.declare_tile</code> 结果作为入参</li>
+</ul>
+<h4 id="tfree_from_aic--tfree_from_aiv"><code>tfree_from_aic</code> / <code>tfree_from_aiv</code><a class="headerlink" href="#tfree_from_aic--tfree_from_aiv" title="Permanent link">&para;</a></h4>
+<p>lower 为：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>pto.tfree(%pipe) { split = 0 }
+</span></code></pre></div>
+<h2 id="7-reserve_buffer-与地址传播">7. <code>reserve_buffer</code> 与地址传播<a class="headerlink" href="#7-reserve_buffer-与地址传播" title="Permanent link">&para;</a></h2>
+<h3 id="71-设计原则">7.1 设计原则<a class="headerlink" href="#71-设计原则" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>reserve_buffer</code> 只表示本函数 consumer slot buffer 的本地预留</li>
+<li><code>import_reserved_buffer</code> 只表示对 peer 预留段地址的引用</li>
+<li><code>reserve_buffer</code> 用属性描述“如何得到地址”，用结果值统一承载“当前可用地址”</li>
+<li>当前编译流程是否启用 local address planning 与 <code>reserve_buffer.auto</code> 共同决定地址处理路径</li>
+<li>启用 local address planning：<code>reserve_buffer</code> 必须使用 <code>auto = true</code>，由 <code>PlanMemory</code> 分配地址</li>
+<li>跳过 local address planning：<code>reserve_buffer</code> 必须使用 <code>auto = false</code> 且显式提供 <code>base</code>，不再进入 <code>PlanMemory</code> 分配路径</li>
+<li>PTOAS 复用现有 <code>PlanMemory</code> pass 实现 <code>reserve_buffer</code> 地址确定，不额外增加独立的预分配 pass</li>
+<li>PTOAS 新增独立地址传播 pass，专门处理 <code>import_reserved_buffer</code> 常量替换与 peer pipe 的 <code>flag_base</code> 对齐</li>
+<li>地址传播 pass 在 EmitC 之前运行；启用规划时位于 plan memory 之后，跳过规划时直接消费前端已给定地址</li>
+</ul>
+<h3 id="72-使用规则">7.2 使用规则<a class="headerlink" href="#72-使用规则" title="Permanent link">&para;</a></h3>
+<h4 id="c2v">C2V<a class="headerlink" href="#c2v" title="Permanent link">&para;</a></h4>
+<ul>
+<li>consumer 是 Vector</li>
+<li>Vector function 需要 <code>reserve_buffer(location = VEC)</code></li>
+<li>Cube function 需要 <code>import_reserved_buffer(peer_func = @vector_kernel)</code></li>
+</ul>
+<h4 id="v2c">V2C<a class="headerlink" href="#v2c" title="Permanent link">&para;</a></h4>
+<ul>
+<li>consumer 是 Cube</li>
+<li>Cube function 需要 <code>reserve_buffer(location = MAT)</code></li>
+<li>Vector function 需要 <code>import_reserved_buffer(peer_func = @cube_kernel)</code></li>
+</ul>
+<h3 id="73-编译路径与地址处理路径">7.3 编译路径与地址处理路径<a class="headerlink" href="#73-编译路径与地址处理路径" title="Permanent link">&para;</a></h3>
+<p>对包含 <code>reserve_buffer</code> 的函数，PTOAS 按当前编译流程是否启用 local address planning 以及 <code>auto</code> 的组合选择地址处理路径：</p>
+<ul>
+<li>启用 local address planning + <code>auto = true</code></li>
+<li>进入 auto 路径</li>
+<li>由 <code>PlanMemory</code> 为 <code>reserve_buffer</code> 分配 <code>base</code></li>
+<li>随后由 <code>pto-resolve-reserved-buffers</code> 传播地址并完成 peer <code>flag_base</code> 对齐</li>
+<li>跳过 local address planning + <code>auto = false</code> + 显式 <code>base</code></li>
+<li>进入 manual 路径</li>
+<li>跳过 <code>PlanMemory</code></li>
+<li>由 <code>pto-resolve-reserved-buffers</code> 直接传播已给定地址并完成 peer <code>flag_base</code> 对齐</li>
+</ul>
+<p>以下组合均非法：</p>
+<ul>
+<li>启用 local address planning + <code>auto = false</code></li>
+<li>跳过 local address planning + <code>auto = true</code></li>
+</ul>
+<p>若函数内不存在 <code>reserve_buffer</code>，则保持现有编译流程对 <code>PlanMemory</code> 的原始控制行为，不引入额外语义。</p>
+<h3 id="74-启用-local-address-planning-的-auto-路径">7.4 启用 local address planning 的 auto 路径<a class="headerlink" href="#74-启用-local-address-planning-的-auto-路径" title="Permanent link">&para;</a></h3>
+<p>在启用 local address planning 的编译流程中，<code>reserve_buffer</code> 必须使用 <code>auto = true</code>，并由 plan memory 负责地址分配。</p>
+<p>若函数中存在 <code>reserve_buffer</code>，则对其 <code>location</code> 对应的地址空间执行：</p>
+<ol>
+<li>先按现有逻辑完成普通 local buffer 的 <code>MemPlan</code></li>
+<li>再收集该地址空间内已经分配完成的 local 区间</li>
+<li>在剩余空洞中按地址空间对齐要求寻找一段可容纳 <code>reserve_buffer.size</code> 的连续区间</li>
+<li>将该区间起始地址回填为这条唯一 <code>reserve_buffer</code> 的 <code>base</code></li>
+</ol>
+<p>即：</p>
+<ul>
+<li>普通 <code>memref.alloc</code> / tile buffer 等 local 内存仍先由既有 <code>MemPlan</code> 按原逻辑分配</li>
+<li><code>reserve_buffer</code> 不参与普通 local buffer 的 inplace / reuse 规划</li>
+<li><code>reserve_buffer</code> 在普通 local buffer 分配完成后，再作为独立的一段连续 local 区间进行 hole 分配</li>
+<li><code>reserve_buffer</code> 不保证位于地址空间起始地址，也不保证形成预留前缀；其语义仅为“在该地址空间中为 consumer slot buffer 找到一段对齐且连续的可用地址”</li>
+<li>若整体容量足够但 <code>MemPlan</code> 结果将空间打散，导致不存在满足大小和对齐要求的连续空洞，则 <code>reserve_buffer</code> 分配失败并报错</li>
+</ul>
+<h3 id="75-跳过-local-address-planning-的-manual-路径">7.5 跳过 local address planning 的 manual 路径<a class="headerlink" href="#75-跳过-local-address-planning-的-manual-路径" title="Permanent link">&para;</a></h3>
+<p>在跳过 local address planning 的编译流程中：</p>
+<ul>
+<li>每个 <code>reserve_buffer</code> 必须显式提供 <code>base</code></li>
+<li>PTOAS 只校验 <code>base</code> 的基本合法性</li>
+<li><code>PlanMemory</code> 不参与该函数的 local 地址分配</li>
+<li>因此该函数中其他 local buffer 地址也必须已由前端或更前阶段整体确定</li>
+<li>地址传播 pass 不做地址分配，只将显式 <code>base</code> 传播到 <code>import_reserved_buffer</code></li>
+</ul>
+<p>该 manual 路径的目标是：</p>
+<ul>
+<li>保持前端或外部地址规划结果不被 PTOAS 改写</li>
+<li>避免 <code>reserve_buffer</code> 显式地址与 PTOAS 自动规划结果相互覆盖</li>
+</ul>
+<h3 id="76-import_reserved_buffer-规则">7.6 <code>import_reserved_buffer</code> 规则<a class="headerlink" href="#76-import_reserved_buffer-规则" title="Permanent link">&para;</a></h3>
+<ul>
+<li>不做地址分配</li>
+</ul>
+<h3 id="77-地址传播-pass-规则">7.7 地址传播 pass 规则<a class="headerlink" href="#77-地址传播-pass-规则" title="Permanent link">&para;</a></h3>
+<p>对每个 <code>import_reserved_buffer</code>：</p>
+<ol>
+<li>通过 <code>peer_func</code> 找到 peer 函数</li>
+<li>在 peer 函数内查找同名 <code>reserve_buffer</code></li>
+<li>读取对方已经解析出的 <code>base</code> 或其等价结果值</li>
+<li>用该常量地址替换 <code>import_reserved_buffer</code> 的结果</li>
+</ol>
+<p>地址传播完成后：</p>
+<ul>
+<li>producer 与 consumer 对同一逻辑 pipe 使用同一个 local buffer 地址</li>
+<li>EmitC 只处理解析后的常量地址，不处理 <code>import_reserved_buffer</code></li>
+</ul>
+<h4 id="771-pass-落点">7.7.1 pass 落点<a class="headerlink" href="#771-pass-落点" title="Permanent link">&para;</a></h4>
+<ul>
+<li>PTOAS 增加独立 <code>ModulePass</code>：<code>pto-resolve-reserved-buffers</code></li>
+<li>该 pass 固定运行在 EmitC lowering 之前</li>
+<li>启用规划时：运行在 <code>pto-plan-memory</code> 之后</li>
+<li>跳过规划时：不经过 <code>pto-plan-memory</code>，但该 pass 仍会运行</li>
+<li>该 pass 不负责地址分配，只消费前一阶段已经确定的 <code>reserve_buffer.base</code></li>
+</ul>
+<h4 id="772-输入假设">7.7.2 输入假设<a class="headerlink" href="#772-输入假设" title="Permanent link">&para;</a></h4>
+<ul>
+<li>启用规划时，<code>reserve_buffer.auto = true</code>，其 <code>base</code> 已由 <code>PlanMemory</code> 回填</li>
+<li>跳过规划时，<code>reserve_buffer.auto = false</code>，其 <code>base</code> 已由前端显式给定</li>
+<li><code>import_reserved_buffer.peer_func</code> 已能解析到合法 peer function</li>
+<li><code>import_reserved_buffer.name</code> 已能在 peer function 中找到唯一匹配的 <code>reserve_buffer</code></li>
+</ul>
+<h4 id="773-实现流程">7.7.3 实现流程<a class="headerlink" href="#773-实现流程" title="Permanent link">&para;</a></h4>
+<p>pass 在模块级按两步执行：</p>
+<ol>
+<li>先建立 peer 对应关系</li>
+<li>再将 <code>reserve_buffer</code> / <code>import_reserved_buffer</code> 物化为显式常量地址</li>
+</ol>
+<p>其中第一步的实现方式是：</p>
+<ul>
+<li>遍历模块内所有 <code>pto.initialize_l2l_pipe</code> / <code>pto.initialize_l2g2l_pipe</code></li>
+<li>对每条 init op 的每个地址操作数，以”函数 + reserve 名字 + 方向”构建 PipePeerKey 并归入逻辑 pipe 分组：</li>
+<li><code>dir_mask = 1/2</code>：只有 <code>local_addr</code>，方向即 <code>dir_mask</code></li>
+<li><code>dir_mask = 3</code>（DIR_BOTH）：一条 pipe 携带两个地址，分别归入两个逻辑方向——<code>local_addr</code> 归入 C2V（方向 1），<code>peer_local_addr</code> 归入 V2C（方向 2）</li>
+<li>将 peer 两侧引用到同一逻辑 pipe 的内部 init op 归并到同一组</li>
+<li>若某条 init 未显式提供 <code>flag_base</code>，则其 <code>local_addr</code> 必须来自 <code>reserve_buffer</code> 或 <code>import_reserved_buffer</code></li>
+<li>对每个逻辑 pipe 分组，要求必须形成完整 peer init pair：恰好两条 init，且分别来自 peer 两侧函数；若 peer 信息不完整则直接报错</li>
+<li>在同一组内，若任一侧已显式提供 <code>flag_base</code>，则该值作为该组最终值；若两侧显式值冲突则报错</li>
+<li>若同组两侧都未显式提供 <code>flag_base</code>，则按默认规则回填：</li>
+<li>单向场景：<code>flag_base = 0</code></li>
+<li>双向场景：C2V 组 <code>flag_base = 0</code>，V2C 组 <code>flag_base = 2</code></li>
+<li>“双向场景”指同一对 peer 函数之间同时存在 C2V 和 V2C 两个逻辑 pipe 分组；DIR_BOTH 的一条物理 pipe 天然产生这两个分组</li>
+<li>完成分组决策后，将最终 <code>flag_base</code> 回填到该组内所有尚未显式填写的 init op，保证 peer 两侧一致</li>
+</ul>
+<p>第二步的实现方式是：</p>
+<ul>
+<li>对每个 <code>reserve_buffer</code>，读取其已解析 <code>base</code></li>
+<li>在该 op 位置插入 <code>arith.constant</code></li>
+<li>用该常量替换 <code>reserve_buffer</code> 结果值的全部 uses</li>
+<li>对每个 <code>import_reserved_buffer</code>，通过 <code>peer_func + name</code> 找到 peer <code>reserve_buffer</code></li>
+<li>读取对方已解析 <code>base</code></li>
+<li>在当前 op 位置插入同值 <code>arith.constant</code></li>
+<li>用该常量替换 <code>import_reserved_buffer</code> 结果值的全部 uses</li>
+<li>常量替换完成后，删除 <code>reserve_buffer</code> / <code>import_reserved_buffer</code></li>
+</ul>
+<h4 id="774-结果-ir-形态">7.7.4 结果 IR 形态<a class="headerlink" href="#774-结果-ir-形态" title="Permanent link">&para;</a></h4>
+<p>地址传播 pass 之后：</p>
+<ul>
+<li>IR 中不再保留 <code>reserve_buffer</code> / <code>import_reserved_buffer</code></li>
+<li>内部 pipe init op 的 <code>local_addr</code> 只再引用普通 SSA 常量地址</li>
+<li>因而后续 EmitC 无需理解 frontend 预留地址语义，只需透传解析后的地址值</li>
+</ul>
+<h4 id="775-失败条件">7.7.5 失败条件<a class="headerlink" href="#775-失败条件" title="Permanent link">&para;</a></h4>
+<p>若出现以下情况，pass 直接报错：</p>
+<ul>
+<li><code>reserve_buffer.base</code> 在 pass 运行时仍未解析</li>
+<li>启用规划的编译流程却出现 <code>reserve_buffer.auto = false</code></li>
+<li>跳过规划的编译流程却出现 <code>reserve_buffer.auto = true</code></li>
+<li><code>peer_func</code> 无法解析到函数</li>
+<li>在 peer function 中找不到同名 <code>reserve_buffer</code></li>
+<li>某条未显式提供 <code>flag_base</code> 的内部 init，其 <code>local_addr</code> 不来自 <code>reserve_buffer</code> / <code>import_reserved_buffer</code></li>
+<li>基于 <code>reserve_buffer</code> / <code>import_reserved_buffer</code> 建立的某个逻辑 pipe 分组，未形成完整 peer init pair</li>
+<li>peer <code>flag_base</code> 已显式给定但两侧取值冲突</li>
+</ul>
+<h2 id="8-flag-分配规则">8. flag 分配规则<a class="headerlink" href="#8-flag-分配规则" title="Permanent link">&para;</a></h2>
+<h3 id="81-总原则">8.1 总原则<a class="headerlink" href="#81-总原则" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>flag_base</code> 由 PTOAS flag 分配阶段在内部 init op 上填写</li>
+<li>在 flag 分配完成前，内部 init op 可以暂时不携带 <code>flag_base</code></li>
+<li>peer 两侧同一逻辑 pipe 必须使用同一个 <code>flag_base</code></li>
+</ul>
+<h3 id="82-单向场景">8.2 单向场景<a class="headerlink" href="#82-单向场景" title="Permanent link">&para;</a></h3>
+<p>当前规划中，当 <code>DIR_MASK = 1</code> 或 <code>2</code> 且函数内仅有该唯一逻辑 pipe 时，可采用：</p>
+<ul>
+<li>该方向唯一逻辑 pipe 的 <code>flag_base = 0</code></li>
+<li>该 pipe 占用逻辑 flag 对：<code>0</code> 和 <code>1</code></li>
+</ul>
+<h3 id="83-双向场景">8.3 双向场景<a class="headerlink" href="#83-双向场景" title="Permanent link">&para;</a></h3>
+<p>当前规划中，当 <code>DIR_MASK = 3</code>（DIR_BOTH）时，虽然物理上只有一条 pipe，但 resolve pass 将其拆为两个逻辑方向分别分配 <code>flag_base</code>：</p>
+<ul>
+<li>C2V 方向：<code>flag_base = 0</code></li>
+<li>V2C 方向：<code>flag_base = 2</code></li>
+</ul>
+<p>因此双向固定占用两组逻辑 flag：</p>
+<ul>
+<li>C2V：<code>0</code> / <code>1</code></li>
+<li>V2C：<code>2</code> / <code>3</code></li>
+</ul>
+<p>对于单条 DIR_BOTH pipe，最终 <code>flag_base</code> 取 C2V 方向的值（<code>0</code>），底层 pto-isa <code>TPipe&lt;flagBase, Direction::DIR_BOTH, ...&gt;</code> 会自动管理两个方向的 flag 对。</p>
+<h3 id="84-与地址传播的关系">8.4 与地址传播的关系<a class="headerlink" href="#84-与地址传播的关系" title="Permanent link">&para;</a></h3>
+<p>地址传播 pass 在识别出 <code>import_reserved_buffer</code> 与 <code>reserve_buffer</code> 的 peer 对应关系后，同时可以完成 peer pipe 的 <code>flag_base</code> 对齐。</p>
+<p>即：</p>
+<ul>
+<li>基于同一 FIFO 通信的两条 peer init op，必须拿到相同的 <code>flag_base</code></li>
+</ul>
+<h2 id="9-verifier-规则">9. verifier 规则<a class="headerlink" href="#9-verifier-规则" title="Permanent link">&para;</a></h2>
+<h3 id="91-前端-verifier">9.1 前端 verifier<a class="headerlink" href="#91-前端-verifier" title="Permanent link">&para;</a></h3>
+<p>前端 verifier 负责检查：</p>
+<ul>
+<li>每个函数 init op 数量是否合法</li>
+<li>每个函数 <code>reserve_buffer</code> / <code>import_reserved_buffer</code> 数量是否合法</li>
+<li><code>DIR_MASK</code> 取值是否合法</li>
+<li><code>SLOT_SIZE &gt; 0</code></li>
+<li><code>reserve_buffer.size == SLOT_SIZE * SLOT_NUM</code></li>
+<li><code>reserve_buffer.location</code> 与 consumer 函数类型匹配</li>
+<li><code>reserve_buffer.name</code> 在函数内唯一</li>
+<li><code>reserve_buffer.auto = false</code> 时必须带 <code>base</code></li>
+<li><code>reserve_buffer.auto = true</code> 时必须不带 <code>base</code></li>
+<li>driver / pipeline 级约束：启用规划的编译流程只接受 <code>auto = true</code></li>
+<li>driver / pipeline 级约束：跳过规划的编译流程只接受 <code>auto = false</code> 且显式 <code>base</code></li>
+<li><code>import_reserved_buffer</code> 能在 <code>peer_func</code> 中找到同名 <code>reserve_buffer</code></li>
+<li>方向相关 op 只能出现在合法 kernel 中</li>
+<li>前端数据传输 op 的 <code>split</code> 必须是合法的编译期常量属性</li>
+</ul>
+<h3 id="92-内部-ir-verifier">9.2 内部 IR verifier<a class="headerlink" href="#92-内部-ir-verifier" title="Permanent link">&para;</a></h3>
+<p>内部 verifier 负责检查：</p>
+<ul>
+<li><code>slot_size &gt; 0</code></li>
+<li><code>slot_num</code> 只允许 <code>8</code> 或 <code>4</code></li>
+<li><code>DIR_MASK=1/2</code> 时，<code>slot_num</code> 必须与单向/双向 lowering 规则一致</li>
+<li><code>local_slot_num</code> 若出现，只允许出现在 <code>pto.initialize_l2g2l_pipe</code> 上，且必须大于 <code>0</code> 且不大于 <code>slot_num</code></li>
+<li><code>flag_base</code> 若出现，必须满足基本合法性；是否已填写以及具体分配值由 flag 分配保证</li>
+<li><code>pto.initialize_l2g2l_pipe</code> 必须提供 <code>gm_addr</code> 和 <code>local_addr</code></li>
+<li><code>pto.initialize_l2l_pipe</code> 必须提供 <code>local_addr</code></li>
+<li><code>dir_mask = 1</code> 的 pipe 只能被 C2V 方向 lowering 使用</li>
+<li><code>dir_mask = 2</code> 的 pipe 只能被 V2C 方向 lowering 使用</li>
+<li><code>tpush/tpop/tfree</code> 的 <code>split</code> 必须是合法的编译期常量属性</li>
+</ul>
+<h3 id="93-关于-split-的校验边界">9.3 关于 <code>split</code> 的校验边界<a class="headerlink" href="#93-关于-split-的校验边界" title="Permanent link">&para;</a></h3>
+<p>PTOAS 对 <code>split</code> 的处理边界如下：</p>
+<ul>
+<li>PTOAS 验证 <code>split</code> 是合法枚举值</li>
+<li>PTOAS 要求 <code>split</code> 以编译期常量属性形式出现</li>
+<li>PTOAS 不验证同一逻辑 pipe 上多个 <code>tpush/tpop/tfree</code> 的 <code>split</code> 是否一致</li>
+<li>PTOAS 不根据 <code>split</code> 改变地址分配、flag 分配或 pipe 配对</li>
+</ul>
+<p>因此：</p>
+<ul>
+<li><code>split</code> 混用是否语义正确，不是 PTOAS 静态保证项</li>
+<li><code>split</code> 相关的语义正确性由前端生成逻辑或前端 verifier 保证</li>
+<li>PTOAS 只负责校验 <code>split</code> 枚举值合法，并将其透传到底层</li>
+</ul>
+<h2 id="10-emitc-与-pto-isa-映射">10. EmitC 与 pto-isa 映射<a class="headerlink" href="#10-emitc-与-pto-isa-映射" title="Permanent link">&para;</a></h2>
+<h3 id="101-初始化-op">10.1 初始化 op<a class="headerlink" href="#101-初始化-op" title="Permanent link">&para;</a></h3>
+<p>在进入 EmitC 前：</p>
+<ul>
+<li>前端 <code>pto.aic_initialize_pipe</code> / <code>pto.aiv_initialize_pipe</code></li>
+<li>前端 <code>pto.tpush_to_aiv</code> / <code>pto.tpush_to_aic</code></li>
+<li>前端 <code>pto.tpop_from_aic</code> / <code>pto.tpop_from_aiv</code></li>
+<li>前端 <code>pto.tfree_from_aic</code> / <code>pto.tfree_from_aiv</code></li>
+<li><code>pto.reserve_buffer</code> / <code>pto.import_reserved_buffer</code></li>
+</ul>
+<p>都必须已经被前序 pass 消除。</p>
+<p>EmitC 只处理 PTOAS 内部统一 IR，不直接理解前端 pipe 接口或地址提示接口。</p>
+<p>EmitC 将以下内部 init op 映射到底层 <code>TPipe</code>：</p>
+<ul>
+<li><code>pto.initialize_l2l_pipe</code></li>
+<li><code>pto.initialize_l2g2l_pipe</code></li>
+</ul>
+<p>映射时需要使用以下信息：</p>
+<ul>
+<li><code>dir_mask</code></li>
+<li><code>slot_size</code></li>
+<li><code>slot_num</code></li>
+<li><code>local_slot_num</code>（仅 <code>initialize_l2g2l_pipe</code>）</li>
+<li><code>flag_base</code></li>
+<li><code>gm_addr</code>（仅 <code>initialize_l2g2l_pipe</code>）</li>
+<li><code>local_addr</code></li>
+<li><code>peer_local_addr</code>（仅 <code>dir_mask = 3</code> 时）</li>
+</ul>
+<p><code>dir_mask</code> 到 <code>Direction</code> 枚举的映射：</p>
+<table>
+<thead>
+<tr>
+<th><code>dir_mask</code></th>
+<th><code>Direction</code> 令牌</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>Direction::DIR_C2V</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>Direction::DIR_V2C</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>Direction::DIR_BOTH</code></td>
+</tr>
+</tbody>
+</table>
+<p>当 <code>dir_mask = 3</code> 时，EmitC 将 <code>local_addr</code> 作为 C2V consumer buf、<code>peer_local_addr</code> 作为 V2C consumer buf 传入 <code>TPipe</code> 构造函数。</p>
+<p>其中：</p>
+<ul>
+<li>若 <code>flag_base</code> 尚未在 EmitC 前完成填写，PTOAS 应报错。</li>
+</ul>
+<h3 id="102-数据传输-op">10.2 数据传输 op<a class="headerlink" href="#102-数据传输-op" title="Permanent link">&para;</a></h3>
+<p>EmitC 将以下内部数据传输 op 映射到底层：</p>
+<ul>
+<li><code>pto.tpush</code> -&gt; <code>TPUSH</code></li>
+<li><code>pto.tpop</code> -&gt; <code>TPOP</code></li>
+<li><code>pto.tfree</code> -&gt; <code>TFREE</code></li>
+</ul>
+<p>映射时需要使用以下信息：</p>
+<ul>
+<li><code>tile</code></li>
+<li><code>split</code></li>
+<li><code>pipe</code></li>
+</ul>
+<p>其中：</p>
+<ul>
+<li><code>split</code> 不在 PTOAS 内部解释</li>
+<li><code>split</code> 作为底层 <code>TPUSH/TPOP/TFREE</code> 的编译期模板实参透传</li>
+</ul>
+<h3 id="103-insertsync">10.3 InsertSync<a class="headerlink" href="#103-insertsync" title="Permanent link">&para;</a></h3>
+<p><code>split</code> 不影响 PTOAS 中的 pipeline derivation 与 InsertSync 规则。</p>
+<p>InsertSync 只依赖：</p>
+<ul>
+<li>op 种类</li>
+<li>init op 形态</li>
+<li><code>dir_mask</code></li>
+<li>目标架构</li>
+</ul>
+<p>而不依赖 <code>split</code>。</p>
+<h2 id="11-编译流程总览">11. 编译流程总览<a class="headerlink" href="#11-编译流程总览" title="Permanent link">&para;</a></h2>
+<p>完整流程如下：</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>前端 IR 接口
+</span><span id="__span-22-2"><a id="__codelineno-22-2" name="__codelineno-22-2" href="#__codelineno-22-2"></a>  -&gt; lowering pass
+</span><span id="__span-22-3"><a id="__codelineno-22-3" name="__codelineno-22-3" href="#__codelineno-22-3"></a>  -&gt; PTOAS 内部统一 IR
+</span><span id="__span-22-4"><a id="__codelineno-22-4" name="__codelineno-22-4" href="#__codelineno-22-4"></a>  -&gt; plan memory
+</span><span id="__span-22-5"><a id="__codelineno-22-5" name="__codelineno-22-5" href="#__codelineno-22-5"></a>  -&gt; 地址传播 pass
+</span><span id="__span-22-6"><a id="__codelineno-22-6" name="__codelineno-22-6" href="#__codelineno-22-6"></a>  -&gt; EmitC
+</span><span id="__span-22-7"><a id="__codelineno-22-7" name="__codelineno-22-7" href="#__codelineno-22-7"></a>  -&gt; pto-isa C++ 代码
+</span></code></pre></div>
+<p>其中：</p>
+<ul>
+<li>lowering pass 负责拆分 <code>DIR_MASK=3</code>、绑定方向与 pipe</li>
+<li>启用规划的编译流程中，plan memory 先按既有逻辑规划普通 local buffer，再为 <code>reserve_buffer</code> 在目标地址空间中分配 hole</li>
+<li>跳过规划的编译流程中，不运行 plan memory；<code>reserve_buffer.base</code> 必须已由前端给定</li>
+<li>地址传播 pass 负责 <code>import_reserved_buffer</code> 常量替换与 peer pipe 的 <code>flag_base</code> 对齐</li>
+<li>EmitC 只负责将内部 <code>initialize_l2l_pipe</code> / <code>initialize_l2g2l_pipe</code> / <code>tpush</code> / <code>tpop</code> / <code>tfree</code> 及其属性透传到底层</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/pypto" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

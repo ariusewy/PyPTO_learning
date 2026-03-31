@@ -1,0 +1,4573 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="PyPTO 编译器学习文档 - 整合 pypto、pto-as、pto-isa 三个项目的中文文档">
+      
+      
+        <meta name="author" content="PyPTO Learner">
+      
+      
+      
+        <link rel="prev" href="../00-overview/">
+      
+      
+        <link rel="next" href="../02-types/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>层级结构 - PyPTO 学习文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pypto-ir-节点层次结构" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../../.." title="PyPTO 学习文档" class="md-header__button md-logo" aria-label="PyPTO 学习文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyPTO 学习文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              层级结构
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../passes/00-pass_manager/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  PyPTO
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../pto-as/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  pto-as
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../pto-isa/01-overview_zh/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  pto-isa
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="PyPTO 学习文档" class="md-nav__button md-logo" aria-label="PyPTO 学习文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PyPTO 学习文档
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyPTO
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PyPTO
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/00-pass_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pass 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pass 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/00-pass_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/01-unroll_loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UnrollLoops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/02-ctrl_flow_transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CtrlFlowTransform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/03-convert_to_ssa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ConvertToSSA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/04-flatten_call_expr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FlattenCallExpr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/05-split_chunked_loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SplitChunkedLoops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/06-interchange_chunk_loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InterchangeChunkLoops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/07-outline_incore_scopes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OutlineIncoreScopes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/08-outline_cluster_scopes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OutlineClusterScopes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/10-flatten_tile_nd_to_2d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FlattenTileNdTo2D
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/12-init_memref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InitMemRef
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/15-memory_reuse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MemoryReuse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/14-insert_sync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InsertSync
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/16-utility_passes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utility Passes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/99-verifier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verifier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IR 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IR 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../00-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IR 概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    层级结构
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    层级结构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bnf-语法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BNF 语法
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#表达式节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        表达式节点
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="表达式节点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#var-的标识identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Var 的标识（Identity）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#二元表达式节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二元表达式节点
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#一元表达式节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一元表达式节点
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#op-和-globalvar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Op 和 GlobalVar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iterarg---循环携带值" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IterArg - 循环携带值
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#语句节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        语句节点
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="语句节点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forstmt-详细说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ForStmt 详细说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whilestmt-详细说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WhileStmt 详细说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scopestmt-详细说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ScopeStmt 详细说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#类型节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        类型节点
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="类型节点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#内存引用-memref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内存引用 (MemRef)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tileview---tile-布局" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TileView - Tile 布局
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function 节点
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Function 节点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paramdirection-枚举" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ParamDirection 枚举
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functiontype-枚举" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FunctionType 枚举
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#program-节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Program 节点
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#按类别汇总的节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        按类别汇总的节点
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#相关文档" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        相关文档
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    类型系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../03-structural_comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    结构对比
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../04-serialization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    序列化
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../05-operators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    操作符
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../06-builder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../07-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codegen 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Codegen 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../codegen/00-pto_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../codegen/01-cce_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CCE Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../codegen/02-orchestration_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestration Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language/00-python_syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 语法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    参考文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    参考文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6_1" id="__nav_2_6_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO-ISA 参考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PTO-ISA 参考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/pto-isa/00-cluster_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster 架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/pto-isa/01-tpush_tpop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TPUSH/TPOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/pto-isa/02-buffer_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Buffer 管理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../pto-as/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pto-as
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    pto-as
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    入门
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    入门
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/01-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO IR 概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/no_npu_compile_only_guide_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    无 NPU 编译指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    参考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    参考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/02-type-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    类型系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/03-enums-attrs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    枚举与属性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/04-operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    操作参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/PTO_IR_manual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    完整 PTO IR 手册
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/05-passes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端 Pass
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    操作详解
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    操作详解
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/README_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/elementwise-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    逐元素操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/tile-scalar-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tile-标量操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/axis-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    轴归约扩展
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/memory-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内存操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/matrix-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    矩阵操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/data-movement-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据搬运
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/complex-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    复杂操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/scalar-arith-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    标量算术
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/control-flow-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    控制流
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设计文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    设计文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/designs/ptoas-tpush-tpop-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TPUSH/TPOP 设计
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pto-isa
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    pto-isa
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/01-overview_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/02-machine-model_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    机器模型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/03-state-and-types_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    状态与类型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/04-tiles-and-globaltensor_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tile 与 GlobalTensor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/05-synchronization_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    同步机制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/06-assembly_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    汇编语言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/07-instructions_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指令集
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/08-programming_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    编程指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/09-virtual-isa-and-ir_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    虚拟 ISA 与 IR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/10-bytecode-and-toolchain_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    字节码与工具链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/11-memory-ordering-and-consistency_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内存顺序与一致性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/12-backend-profiles-and-conformance_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端配置与一致性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_13" id="__nav_4_13_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    附录
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    附录
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/appendix-a-glossary_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    术语表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/appendix-b-instruction-contract-template_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指令契约模板
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/appendix-c-diagnostics-taxonomy_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    诊断分类
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/appendix-d-instruction-family-matrix_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指令族矩阵
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#bnf-语法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BNF 语法
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#表达式节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        表达式节点
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="表达式节点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#var-的标识identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Var 的标识（Identity）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#二元表达式节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        二元表达式节点
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#一元表达式节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        一元表达式节点
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#op-和-globalvar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Op 和 GlobalVar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iterarg---循环携带值" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IterArg - 循环携带值
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#语句节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        语句节点
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="语句节点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#forstmt-详细说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ForStmt 详细说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whilestmt-详细说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WhileStmt 详细说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scopestmt-详细说明" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ScopeStmt 详细说明
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#类型节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        类型节点
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="类型节点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#内存引用-memref" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内存引用 (MemRef)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tileview---tile-布局" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TileView - Tile 布局
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#function-节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function 节点
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Function 节点">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#paramdirection-枚举" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ParamDirection 枚举
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#functiontype-枚举" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FunctionType 枚举
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#program-节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Program 节点
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#按类别汇总的节点" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        按类别汇总的节点
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#相关文档" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        相关文档
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="pypto-ir-节点层次结构">PyPTO IR 节点层次结构<a class="headerlink" href="#pypto-ir-节点层次结构" title="Permanent link">&para;</a></h1>
+<p>本文档提供所有 IR 节点类型的完整参考，按类别组织。</p>
+<h2 id="bnf-语法">BNF 语法<a class="headerlink" href="#bnf-语法" title="Permanent link">&para;</a></h2>
+<div class="language-bnf highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">&lt;</span><span class="nc">program</span><span class="p">&gt;</span>    <span class="o">::=</span> [ identifier &quot;:&quot; ] { <span class="p">&lt;</span><span class="nc">function</span><span class="p">&gt;</span> }
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="p">&lt;</span><span class="nc">function</span><span class="p">&gt;</span>   <span class="o">::=</span> &quot;def&quot; identifier &quot;(&quot; [ <span class="p">&lt;</span><span class="nc">param_list</span><span class="p">&gt;</span> ] &quot;)&quot; [ &quot;-&gt;&quot; <span class="p">&lt;</span><span class="nc">type_list</span><span class="p">&gt;</span> ] &quot;:&quot; <span class="p">&lt;</span><span class="nc">stmt</span><span class="p">&gt;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">&lt;</span><span class="nc">param_list</span><span class="p">&gt;</span> <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">param</span><span class="p">&gt;</span> { &quot;,&quot; <span class="p">&lt;</span><span class="nc">param</span><span class="p">&gt;</span> }
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="p">&lt;</span><span class="nc">param</span><span class="p">&gt;</span>      <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">var</span><span class="p">&gt;</span> | &quot;(&quot; <span class="p">&lt;</span><span class="nc">var</span><span class="p">&gt;</span> &quot;,&quot; <span class="p">&lt;</span><span class="nc">param_direction</span><span class="p">&gt;</span> &quot;)&quot;
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="p">&lt;</span><span class="nc">param_direction</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;In&quot; | &quot;Out&quot; | &quot;InOut&quot;
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="p">&lt;</span><span class="nc">type_list</span><span class="p">&gt;</span>  <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">type</span><span class="p">&gt;</span> { &quot;,&quot; <span class="p">&lt;</span><span class="nc">type</span><span class="p">&gt;</span> }
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="p">&lt;</span><span class="nc">stmt</span><span class="p">&gt;</span>       <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">assign_stmt</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">if_stmt</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">for_stmt</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">while_stmt</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">return_stmt</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">yield_stmt</span><span class="p">&gt;</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>               | <span class="p">&lt;</span><span class="nc">eval_stmt</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">seq_stmts</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">scope_stmt</span><span class="p">&gt;</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>               | <span class="p">&lt;</span><span class="nc">break_stmt</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">continue_stmt</span><span class="p">&gt;</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="p">&lt;</span><span class="nc">assign_stmt</span><span class="p">&gt;</span> <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">var</span><span class="p">&gt;</span> &quot;=&quot; <span class="p">&lt;</span><span class="nc">expr</span><span class="p">&gt;</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="p">&lt;</span><span class="nc">if_stmt</span><span class="p">&gt;</span>    <span class="o">::=</span> &quot;if&quot; <span class="p">&lt;</span><span class="nc">expr</span><span class="p">&gt;</span> &quot;:&quot; <span class="p">&lt;</span><span class="nc">stmt_list</span><span class="p">&gt;</span> [ &quot;else&quot; &quot;:&quot; <span class="p">&lt;</span><span class="nc">stmt_list</span><span class="p">&gt;</span> ] [ &quot;return&quot; <span class="p">&lt;</span><span class="nc">var_list</span><span class="p">&gt;</span> ]
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="p">&lt;</span><span class="nc">for_stmt</span><span class="p">&gt;</span>   <span class="o">::=</span> &quot;for&quot; <span class="p">&lt;</span><span class="nc">var</span><span class="p">&gt;</span> [ &quot;,&quot; &quot;(&quot; <span class="p">&lt;</span><span class="nc">iter_arg_list</span><span class="p">&gt;</span> &quot;)&quot; ] &quot;in&quot;
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                 ( &quot;range&quot; | &quot;pl.range&quot; ) &quot;(&quot; <span class="p">&lt;</span><span class="nc">expr</span><span class="p">&gt;</span> &quot;,&quot; <span class="p">&lt;</span><span class="nc">expr</span><span class="p">&gt;</span> &quot;,&quot; <span class="p">&lt;</span><span class="nc">expr</span><span class="p">&gt;</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>                 [ &quot;,&quot; &quot;init_values&quot; &quot;=&quot; &quot;(&quot; <span class="p">&lt;</span><span class="nc">expr_list</span><span class="p">&gt;</span> &quot;)&quot; ] &quot;)&quot; &quot;:&quot; <span class="p">&lt;</span><span class="nc">stmt_list</span><span class="p">&gt;</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                 [ <span class="p">&lt;</span><span class="nc">return_assignments</span><span class="p">&gt;</span> ]
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="p">&lt;</span><span class="nc">while_stmt</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;while&quot; <span class="p">&lt;</span><span class="nc">expr</span><span class="p">&gt;</span> &quot;:&quot; <span class="p">&lt;</span><span class="nc">stmt_list</span><span class="p">&gt;</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>               | &quot;for&quot; &quot;(&quot; <span class="p">&lt;</span><span class="nc">iter_arg_list</span><span class="p">&gt;</span> &quot;)&quot; &quot;in&quot; &quot;pl.while_&quot;
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                 &quot;(&quot; &quot;init_values&quot; &quot;=&quot; &quot;(&quot; <span class="p">&lt;</span><span class="nc">expr_list</span><span class="p">&gt;</span> &quot;)&quot; &quot;)&quot; &quot;:&quot;
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                 &quot;pl.cond&quot; &quot;(&quot; <span class="p">&lt;</span><span class="nc">expr</span><span class="p">&gt;</span> &quot;)&quot; <span class="p">&lt;</span><span class="nc">stmt_list</span><span class="p">&gt;</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                 [ <span class="p">&lt;</span><span class="nc">return_assignments</span><span class="p">&gt;</span> ]
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="p">&lt;</span><span class="nc">yield_stmt</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;yield&quot; [ <span class="p">&lt;</span><span class="nc">var_list</span><span class="p">&gt;</span> ]
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="p">&lt;</span><span class="nc">return_stmt</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;return&quot; [ <span class="p">&lt;</span><span class="nc">var_list</span><span class="p">&gt;</span> ]
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="p">&lt;</span><span class="nc">eval_stmt</span><span class="p">&gt;</span>  <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">expr</span><span class="p">&gt;</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="p">&lt;</span><span class="nc">seq_stmts</span><span class="p">&gt;</span>  <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">stmt</span><span class="p">&gt;</span> { &quot;;&quot; <span class="p">&lt;</span><span class="nc">stmt</span><span class="p">&gt;</span> }
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="p">&lt;</span><span class="nc">scope_stmt</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;with&quot; &quot;pl.incore&quot; &quot;(&quot; &quot;)&quot; &quot;:&quot; <span class="p">&lt;</span><span class="nc">stmt_list</span><span class="p">&gt;</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="p">&lt;</span><span class="nc">break_stmt</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;break&quot;
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="p">&lt;</span><span class="nc">continue_stmt</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;continue&quot;
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="p">&lt;</span><span class="nc">expr</span><span class="p">&gt;</span>       <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">var</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">const_int</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">const_bool</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">const_float</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">call</span><span class="p">&gt;</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>               | <span class="p">&lt;</span><span class="nc">binary_op</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">unary_op</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">tuple_get_item</span><span class="p">&gt;</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="p">&lt;</span><span class="nc">call</span><span class="p">&gt;</span>       <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">op</span><span class="p">&gt;</span> &quot;(&quot; [ <span class="p">&lt;</span><span class="nc">expr_list</span><span class="p">&gt;</span> ] &quot;)&quot;
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="p">&lt;</span><span class="nc">op</span><span class="p">&gt;</span>         <span class="o">::=</span> identifier | <span class="p">&lt;</span><span class="nc">global_var</span><span class="p">&gt;</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="p">&lt;</span><span class="nc">type</span><span class="p">&gt;</span>       <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">scalar_type</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">tensor_type</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">tile_type</span><span class="p">&gt;</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>               | <span class="p">&lt;</span><span class="nc">tuple_type</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">pipe_type</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">unknown_type</span><span class="p">&gt;</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a><span class="p">&lt;</span><span class="nc">scalar_type</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;ScalarType&quot; &quot;(&quot; <span class="p">&lt;</span><span class="nc">data_type</span><span class="p">&gt;</span> &quot;)&quot;
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a><span class="p">&lt;</span><span class="nc">tensor_type</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;TensorType&quot; &quot;(&quot; <span class="p">&lt;</span><span class="nc">data_type</span><span class="p">&gt;</span> &quot;,&quot; <span class="p">&lt;</span><span class="nc">shape</span><span class="p">&gt;</span> [ &quot;,&quot; <span class="p">&lt;</span><span class="nc">memref</span><span class="p">&gt;</span> ] &quot;)&quot;
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a><span class="p">&lt;</span><span class="nc">tile_type</span><span class="p">&gt;</span>   <span class="o">::=</span> &quot;TileType&quot; &quot;(&quot; <span class="p">&lt;</span><span class="nc">data_type</span><span class="p">&gt;</span> &quot;,&quot; <span class="p">&lt;</span><span class="nc">shape</span><span class="p">&gt;</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>                 [ &quot;,&quot; <span class="p">&lt;</span><span class="nc">tile_type_arg</span><span class="p">&gt;</span> { &quot;,&quot; <span class="p">&lt;</span><span class="nc">tile_type_arg</span><span class="p">&gt;</span> } ]
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>                 &quot;)&quot;
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a><span class="p">&lt;</span><span class="nc">tile_type_arg</span><span class="p">&gt;</span> <span class="o">::=</span> <span class="p">&lt;</span><span class="nc">memref</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">tile_view</span><span class="p">&gt;</span> | <span class="p">&lt;</span><span class="nc">memory_space</span><span class="p">&gt;</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a><span class="p">&lt;</span><span class="nc">tuple_type</span><span class="p">&gt;</span>  <span class="o">::=</span> &quot;TupleType&quot; &quot;(&quot; &quot;[&quot; <span class="p">&lt;</span><span class="nc">type_list</span><span class="p">&gt;</span> &quot;]&quot; &quot;)&quot;
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a><span class="p">&lt;</span><span class="nc">pipe_type</span><span class="p">&gt;</span>   <span class="o">::=</span> &quot;PipeType&quot; &quot;(&quot; <span class="p">&lt;</span><span class="nc">pipe_kind</span><span class="p">&gt;</span> &quot;)&quot;
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a><span class="p">&lt;</span><span class="nc">shape</span><span class="p">&gt;</span>       <span class="o">::=</span> &quot;[&quot; <span class="p">&lt;</span><span class="nc">expr_list</span><span class="p">&gt;</span> &quot;]&quot;
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a><span class="p">&lt;</span><span class="nc">data_type</span><span class="p">&gt;</span>   <span class="o">::=</span> &quot;INT32&quot; | &quot;INT64&quot; | &quot;FP16&quot; | &quot;FP32&quot; | &quot;FP64&quot; | &quot;BOOL&quot; | ...
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a><span class="p">&lt;</span><span class="nc">memory_space</span><span class="p">&gt;</span> <span class="o">::=</span> &quot;DDR&quot; | &quot;Vec&quot; | &quot;Mat&quot; | &quot;Left&quot; | &quot;Right&quot; | &quot;Acc&quot; | &quot;Bias&quot;
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a><span class="p">&lt;</span><span class="nc">pipe_kind</span><span class="p">&gt;</span>   <span class="o">::=</span> &quot;S&quot; | &quot;V&quot; | &quot;M&quot; | &quot;MTE1&quot; | &quot;MTE2&quot; | &quot;MTE3&quot; | &quot;ALL&quot; | ...
+</span></code></pre></div>
+<p>对于 <code>TileType</code>，每个可选参数最多只能出现一次。如果存在 <code>MemRef</code>，
+则必须在 <code>TileType</code> 上同时显式提供 <code>memory_space</code>。</p>
+<h2 id="表达式节点">表达式节点<a class="headerlink" href="#表达式节点" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>节点类型</th>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Var</strong></td>
+<td><code>name_hint_</code>, <code>type_</code></td>
+<td>变量引用（以指针为标识，而非名称）</td>
+</tr>
+<tr>
+<td><strong>IterArg</strong></td>
+<td><code>name_hint_</code>, <code>type_</code>, <code>initValue_</code></td>
+<td>循环迭代参数（扩展自 Var）</td>
+</tr>
+<tr>
+<td><strong>ConstInt</strong></td>
+<td><code>value_</code>, <code>dtype_</code></td>
+<td>整数常量</td>
+</tr>
+<tr>
+<td><strong>ConstBool</strong></td>
+<td><code>value_</code></td>
+<td>布尔常量（始终为 BOOL dtype）</td>
+</tr>
+<tr>
+<td><strong>ConstFloat</strong></td>
+<td><code>value_</code>, <code>dtype_</code></td>
+<td>浮点常量</td>
+</tr>
+<tr>
+<td><strong>Call</strong></td>
+<td><code>op_</code>, <code>args_</code>, <code>kwargs_</code></td>
+<td>函数/运算符调用</td>
+</tr>
+<tr>
+<td><strong>TupleGetItemExpr</strong></td>
+<td><code>tuple_</code>, <code>index_</code></td>
+<td>元组元素访问</td>
+</tr>
+</tbody>
+</table>
+<h3 id="var-的标识identity">Var 的标识（Identity）<a class="headerlink" href="#var-的标识identity" title="Permanent link">&para;</a></h3>
+<p>变量的标识由**对象指针**（或等价的 <code>unique_id_</code>）决定，<strong>而非</strong> <code>name_hint_</code>。两个具有相同 <code>name_hint_</code> 的 <code>Var</code> 对象，如果是不同对象，则是不同的变量。该字段命名为 <code>name_hint_</code>（而非 <code>name_</code>），正是为了明确这一语义。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name_hint_</code></td>
+<td>用于打印和调试的装饰性标签。属于 <code>IgnoreField</code> —— 不参与结构比较和哈希。</td>
+</tr>
+<tr>
+<td><code>unique_id_</code></td>
+<td>构造时分配的单调递增 ID，用于确定性哈希。</td>
+</tr>
+<tr>
+<td>对象指针</td>
+<td>权威标识 —— 两个引用指向同一变量，当且仅当它们指向同一个 <code>Var</code> 对象。</td>
+</tr>
+</tbody>
+</table>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="c1">// 相同的 name_hint，但是不同的变量</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="k">auto</span><span class="w"> </span><span class="n">x1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Var</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">span</span><span class="p">);</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="k">auto</span><span class="w"> </span><span class="n">x2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">make_shared</span><span class="o">&lt;</span><span class="n">Var</span><span class="o">&gt;</span><span class="p">(</span><span class="s">&quot;x&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">type</span><span class="p">,</span><span class="w"> </span><span class="n">span</span><span class="p">);</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="c1">// x1 != x2 —— 尽管共享名称 &quot;x&quot;，它们是不同的变量</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="c1">// 同一个变量的两次引用</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="k">auto</span><span class="w"> </span><span class="n">x_ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x1</span><span class="p">;</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="c1">// x1 == x_ref —— 相同的指针，相同的变量</span>
+</span></code></pre></div>
+<h3 id="二元表达式节点">二元表达式节点<a class="headerlink" href="#二元表达式节点" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>节点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>算术运算</strong></td>
+<td>Add, Sub, Mul, FloorDiv, FloorMod, FloatDiv</td>
+</tr>
+<tr>
+<td><strong>数学运算</strong></td>
+<td>Min, Max, Pow</td>
+</tr>
+<tr>
+<td><strong>比较运算</strong></td>
+<td>Eq, Ne, Lt, Le, Gt, Ge</td>
+</tr>
+<tr>
+<td><strong>逻辑运算</strong></td>
+<td>And, Or, Xor</td>
+</tr>
+<tr>
+<td><strong>位运算</strong></td>
+<td>BitAnd, BitOr, BitXor, BitShiftLeft, BitShiftRight</td>
+</tr>
+</tbody>
+</table>
+<p>所有二元表达式包含：<code>lhs_</code>、<code>rhs_</code>、<code>dtype_</code></p>
+<h3 id="一元表达式节点">一元表达式节点<a class="headerlink" href="#一元表达式节点" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>节点</th>
+<th>运算</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Abs</strong></td>
+<td>绝对值</td>
+</tr>
+<tr>
+<td><strong>Neg</strong></td>
+<td>取反</td>
+</tr>
+<tr>
+<td><strong>Not</strong></td>
+<td>逻辑非</td>
+</tr>
+<tr>
+<td><strong>BitNot</strong></td>
+<td>按位取反</td>
+</tr>
+<tr>
+<td><strong>Cast</strong></td>
+<td>类型转换</td>
+</tr>
+</tbody>
+</table>
+<p>所有一元表达式包含：<code>operand_</code>、<code>dtype_</code></p>
+<h3 id="op-和-globalvar">Op 和 GlobalVar<a class="headerlink" href="#op-和-globalvar" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>节点类型</th>
+<th>用途</th>
+<th>使用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Op</strong></td>
+<td>通用操作/函数引用</td>
+<td>外部运算符、内置函数</td>
+</tr>
+<tr>
+<td><strong>GlobalVar</strong></td>
+<td>程序内的函数引用</td>
+<td>程序内函数调用</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="n">op</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">Op</span><span class="p">(</span><span class="s2">&quot;my_function&quot;</span><span class="p">);</span> <span class="n">call</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">Call</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">span</span><span class="p">)</span>  <span class="c1"># External</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="n">gvar</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">GlobalVar</span><span class="p">(</span><span class="s2">&quot;helper&quot;</span><span class="p">);</span> <span class="n">call</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">Call</span><span class="p">(</span><span class="n">gvar</span><span class="p">,</span> <span class="p">[</span><span class="n">x</span><span class="p">],</span> <span class="n">span</span><span class="p">)</span>  <span class="c1"># Internal</span>
+</span></code></pre></div>
+<h3 id="iterarg---循环携带值">IterArg - 循环携带值<a class="headerlink" href="#iterarg---循环携带值" title="Permanent link">&para;</a></h3>
+<p><code>IterArg</code> 扩展 <code>Var</code>，添加 <code>initValue_</code> 以支持静态单赋值 (SSA) 风格的循环。作用域限定在循环体内，通过 <code>yield</code> 更新，最终值存储在 <code>return_vars</code> 中。</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="c1"># for i, (sum,) in pl.range(n, init_values=(0,)): sum = pl.yield_(sum + i)</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="n">sum_iter</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">IterArg</span><span class="p">(</span><span class="s2">&quot;sum&quot;</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">ScalarType</span><span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">INT64</span><span class="p">),</span> <span class="n">init_val</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="n">for_stmt</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">ForStmt</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="p">[</span><span class="n">sum_iter</span><span class="p">],</span> <span class="n">body</span><span class="p">,</span> <span class="p">[</span><span class="n">sum_final</span><span class="p">],</span> <span class="n">span</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="语句节点">语句节点<a class="headerlink" href="#语句节点" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>节点类型</th>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>AssignStmt</strong></td>
+<td><code>var_</code> (DefField), <code>value_</code> (UsualField)</td>
+<td>变量赋值</td>
+</tr>
+<tr>
+<td><strong>IfStmt</strong></td>
+<td><code>condition_</code>, <code>then_stmts_</code>, <code>else_stmts_</code>, <code>return_vars_</code></td>
+<td>条件分支</td>
+</tr>
+<tr>
+<td><strong>ForStmt</strong></td>
+<td><code>loop_var_</code> (DefField), <code>start_</code>, <code>stop_</code>, <code>step_</code>, <code>iter_args_</code> (DefField), <code>body_</code>, <code>return_vars_</code> (DefField), <code>kind_</code></td>
+<td>带可选迭代参数的 for 循环</td>
+</tr>
+<tr>
+<td><strong>WhileStmt</strong></td>
+<td><code>condition_</code>, <code>iter_args_</code> (DefField), <code>body_</code>, <code>return_vars_</code> (DefField)</td>
+<td>带条件和迭代参数的 while 循环</td>
+</tr>
+<tr>
+<td><strong>ScopeStmt</strong></td>
+<td><code>scope_kind_</code>, <code>body_</code></td>
+<td>标记具有特定执行上下文的区域（如 InCore）</td>
+</tr>
+<tr>
+<td><strong>YieldStmt</strong></td>
+<td><code>values_</code></td>
+<td>在循环迭代中产出值</td>
+</tr>
+<tr>
+<td><strong>EvalStmt</strong></td>
+<td><code>expr_</code></td>
+<td>为副作用求值表达式</td>
+</tr>
+<tr>
+<td><strong>SeqStmts</strong></td>
+<td><code>stmts_</code></td>
+<td>通用语句序列</td>
+</tr>
+<tr>
+<td><strong>BreakStmt</strong></td>
+<td><em>(无)</em></td>
+<td>退出循环</td>
+</tr>
+<tr>
+<td><strong>ContinueStmt</strong></td>
+<td><em>(无)</em></td>
+<td>跳至下一次循环迭代</td>
+</tr>
+</tbody>
+</table>
+<h3 id="forstmt-详细说明">ForStmt 详细说明<a class="headerlink" href="#forstmt-详细说明" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="c1"># Without iter_args: for i in pl.range(10): x = x + i</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="n">for_stmt</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">ForStmt</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="p">[],</span> <span class="n">body</span><span class="p">,</span> <span class="p">[],</span> <span class="n">span</span><span class="p">)</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="c1"># With iter_args: for i, (sum,) in pl.range(10, init_values=(0,)): sum = pl.yield_(sum + i)</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="n">for_stmt</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">ForStmt</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="p">[</span><span class="n">sum_iter</span><span class="p">],</span> <span class="n">body</span><span class="p">,</span> <span class="p">[</span><span class="n">sum_final</span><span class="p">],</span> <span class="n">span</span><span class="p">)</span>
+</span></code></pre></div>
+<blockquote>
+<p><strong>注意:</strong> DSL 接受简写形式 <code>pl.range(stop)</code> / <code>pl.range(start, stop)</code> 作为语法糖（类似 Python 的 <code>range()</code>）。IR 始终存储三个字段（<code>start_</code>、<code>stop_</code>、<code>step_</code>）；解析器填充默认值（start=0, step=1），打印器在匹配时省略它们。</p>
+</blockquote>
+<h3 id="whilestmt-详细说明">WhileStmt 详细说明<a class="headerlink" href="#whilestmt-详细说明" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="c1"># Natural: while x &lt; 10: x = x + 1</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="n">while_stmt</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">WhileStmt</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="p">[],</span> <span class="n">body</span><span class="p">,</span> <span class="p">[],</span> <span class="n">span</span><span class="p">)</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="c1"># SSA form: for (x,) in pl.while_(init_values=(0,)): pl.cond(x &lt; 10); x = pl.yield_(x + 1)</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="n">while_stmt</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">WhileStmt</span><span class="p">(</span><span class="n">condition</span><span class="p">,</span> <span class="p">[</span><span class="n">x_iter</span><span class="p">],</span> <span class="n">body</span><span class="p">,</span> <span class="p">[</span><span class="n">x_final</span><span class="p">],</span> <span class="n">span</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>属性：</strong> <code>condition_</code> 每次迭代都会求值；支持 SSA iter_args/return_vars；DSL 使用 <code>pl.cond()</code> 作为第一条语句。</p>
+<ul>
+<li>不带 iter_args 的自然语法通过 ConvertToSSA Pass 转换为 SSA</li>
+<li>存在 iter_args 时，循环体必须以 YieldStmt 结尾</li>
+</ul>
+<h3 id="scopestmt-详细说明">ScopeStmt 详细说明<a class="headerlink" href="#scopestmt-详细说明" title="Permanent link">&para;</a></h3>
+<p>标记具有特定执行上下文的区域（如用于 AICore 子图的 InCore）。</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="c1"># with pl.incore(): y = pl.add(x, x)</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="n">scope_stmt</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">ScopeStmt</span><span class="p">(</span><span class="n">ir</span><span class="o">.</span><span class="n">ScopeKind</span><span class="o">.</span><span class="n">InCore</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>属性：</strong></p>
+<ul>
+<li><code>scope_kind_</code>：执行上下文（<code>ScopeKind.InCore</code>）</li>
+<li><code>body_</code>：嵌套语句</li>
+<li>对 SSA 透明（无 iter_args/return_vars）</li>
+<li>不是控制流（执行一次，线性执行）</li>
+<li><code>OutlineIncoreScopes</code> Pass 将其提取为 <code>Function(InCore)</code></li>
+</ul>
+<p><strong>变换示例：</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="c1"># Before: with pl.incore(): y = pl.add(x, x); return y</span>
+</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="c1"># After: main_incore_0(x) -&gt; y; main(x): y = main_incore_0(x); return y</span>
+</span></code></pre></div>
+<p><strong>并行 for 循环 (ForKind)：</strong></p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="c1"># for i in pl.parallel(10): ...</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="n">for_stmt</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">ForStmt</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">stop</span><span class="p">,</span> <span class="n">step</span><span class="p">,</span> <span class="p">[],</span> <span class="n">body</span><span class="p">,</span> <span class="p">[],</span> <span class="n">span</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">ForKind</span><span class="o">.</span><span class="n">Parallel</span><span class="p">)</span>
+</span></code></pre></div>
+<p><code>kind_</code> 字段（<code>ForKind</code> 枚举）区分顺序执行（<code>ForKind.Sequential</code>，默认）、并行执行（<code>ForKind.Parallel</code>）和编译时展开（<code>ForKind.Unroll</code>）的循环。在 DSL 中，<code>pl.range()</code> 生成顺序循环，<code>pl.parallel()</code> 生成并行循环，<code>pl.unroll()</code> 生成编译时展开循环。打印器相应输出 <code>pl.parallel(...)</code> 或 <code>pl.unroll(...)</code>。</p>
+<p><strong>要求：</strong></p>
+<ul>
+<li>yield 的值数量 = IterArgs 数量</li>
+<li>return_vars 数量 = IterArgs 数量</li>
+<li>IterArgs 仅在循环体内可访问</li>
+<li>return_vars 在循环之后可访问</li>
+</ul>
+<h2 id="类型节点">类型节点<a class="headerlink" href="#类型节点" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>节点类型</th>
+<th>字段</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ScalarType</strong></td>
+<td><code>dtype_</code></td>
+<td>标量类型（INT64、FP32 等）</td>
+</tr>
+<tr>
+<td><strong>TensorType</strong></td>
+<td><code>shape_</code>, <code>dtype_</code>, <code>memref_</code>（可选）</td>
+<td>多维张量 (Tensor)</td>
+</tr>
+<tr>
+<td><strong>TileType</strong></td>
+<td><code>shape_</code>, <code>dtype_</code>, <code>memref_</code>（可选）, <code>tile_view_</code>（可选）, <code>memory_space_</code>（可选）</td>
+<td>统一缓冲区中的 Tile</td>
+</tr>
+<tr>
+<td><strong>TupleType</strong></td>
+<td><code>types_</code></td>
+<td>类型元组</td>
+</tr>
+<tr>
+<td><strong>PipeType</strong></td>
+<td><code>pipe_kind_</code></td>
+<td>硬件流水线/屏障</td>
+</tr>
+<tr>
+<td><strong>UnknownType</strong></td>
+<td>-</td>
+<td>未知或推断类型</td>
+</tr>
+</tbody>
+</table>
+<h3 id="内存引用-memref">内存引用 (MemRef)<a class="headerlink" href="#内存引用-memref" title="Permanent link">&para;</a></h3>
+<p>描述张量/Tile 共享的内存分配元数据。对于 Tile，内存空间保存在
+<code>TileType.memory_space_</code>；<code>TensorType</code> 的规范内存空间固定为 DDR。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>addr_</code></td>
+<td>ExprPtr</td>
+<td>基地址</td>
+</tr>
+<tr>
+<td><code>size_</code></td>
+<td>size_t</td>
+<td>大小（字节）</td>
+</tr>
+<tr>
+<td><code>id_</code></td>
+<td>uint64_t</td>
+<td>稳定的 MemRef 标识符</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">memref</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">MemRef</span><span class="p">(</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>    <span class="n">ir</span><span class="o">.</span><span class="n">ConstInt</span><span class="p">(</span><span class="mh">0x1000</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INT64</span><span class="p">,</span> <span class="n">span</span><span class="p">),</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a>    <span class="mi">1024</span><span class="p">,</span>  <span class="c1"># bytes</span>
+</span><span id="__span-9-4"><a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a>    <span class="mi">0</span>     <span class="c1"># id</span>
+</span><span id="__span-9-5"><a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a><span class="p">)</span>
+</span></code></pre></div>
+<blockquote>
+<p><strong>注意：</strong> <code>ir.Mem</code> 是 <code>ir.MemorySpace</code> 的简写别名。</p>
+</blockquote>
+<h3 id="tileview---tile-布局">TileView - Tile 布局<a class="headerlink" href="#tileview---tile-布局" title="Permanent link">&para;</a></h3>
+<p>描述 Tile 的布局和访问模式：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>valid_shape</code></td>
+<td>list[ExprPtr]</td>
+<td>有效维度</td>
+</tr>
+<tr>
+<td><code>stride</code></td>
+<td>list[ExprPtr]</td>
+<td>每维步长</td>
+</tr>
+<tr>
+<td><code>start_offset</code></td>
+<td>ExprPtr</td>
+<td>起始偏移量</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="n">tile_view</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">TileView</span><span class="p">()</span>
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a><span class="n">tile_view</span><span class="o">.</span><span class="n">valid_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">ConstInt</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INT64</span><span class="p">,</span> <span class="n">span</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">2</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a><span class="n">tile_view</span><span class="o">.</span><span class="n">stride</span> <span class="o">=</span> <span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">ConstInt</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INT64</span><span class="p">,</span> <span class="n">span</span><span class="p">),</span> <span class="n">ir</span><span class="o">.</span><span class="n">ConstInt</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INT64</span><span class="p">,</span> <span class="n">span</span><span class="p">)]</span>
+</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a><span class="n">tile_view</span><span class="o">.</span><span class="n">start_offset</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">ConstInt</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INT64</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="function-节点">Function 节点<a class="headerlink" href="#function-节点" title="Permanent link">&para;</a></h2>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># def add(x, y) -&gt; int: return x + y</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a><span class="n">params</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>    <span class="n">ir</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">ScalarType</span><span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">INT64</span><span class="p">),</span> <span class="n">span</span><span class="p">),</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a>    <span class="n">ir</span><span class="o">.</span><span class="n">Var</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">ScalarType</span><span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">INT64</span><span class="p">),</span> <span class="n">span</span><span class="p">)</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a><span class="p">]</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a><span class="n">return_types</span> <span class="o">=</span> <span class="p">[</span><span class="n">ir</span><span class="o">.</span><span class="n">ScalarType</span><span class="p">(</span><span class="n">DataType</span><span class="o">.</span><span class="n">INT64</span><span class="p">)]</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="n">body</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">AssignStmt</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">DataType</span><span class="o">.</span><span class="n">INT64</span><span class="p">,</span> <span class="n">span</span><span class="p">),</span> <span class="n">span</span><span class="p">)</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a><span class="n">func</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s2">&quot;add&quot;</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">return_types</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># With function type</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="n">func_orch</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s2">&quot;orchestrator&quot;</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">return_types</span><span class="p">,</span> <span class="n">body</span><span class="p">,</span> <span class="n">span</span><span class="p">,</span> <span class="n">ir</span><span class="o">.</span><span class="n">FunctionType</span><span class="o">.</span><span class="n">Orchestration</span><span class="p">)</span>
+</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name_</code></td>
+<td>string</td>
+<td>函数名称</td>
+</tr>
+<tr>
+<td><code>func_type_</code></td>
+<td>FunctionType</td>
+<td>函数类型（Opaque、Orchestration、InCore、AIC、AIV 或 Group）</td>
+</tr>
+<tr>
+<td><code>params_</code></td>
+<td>list[VarPtr]</td>
+<td>参数变量 (DefField)</td>
+</tr>
+<tr>
+<td><code>param_directions_</code></td>
+<td>list[ParamDirection]</td>
+<td>参数方向，与 params_ 长度相同</td>
+</tr>
+<tr>
+<td><code>return_types_</code></td>
+<td>list[TypePtr]</td>
+<td>返回类型</td>
+</tr>
+<tr>
+<td><code>body_</code></td>
+<td>StmtPtr</td>
+<td>函数体</td>
+</tr>
+</tbody>
+</table>
+<h3 id="paramdirection-枚举">ParamDirection 枚举<a class="headerlink" href="#paramdirection-枚举" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>In</code></td>
+<td>只读输入参数（默认）</td>
+</tr>
+<tr>
+<td><code>Out</code></td>
+<td>只写输出参数</td>
+</tr>
+<tr>
+<td><code>InOut</code></td>
+<td>读写输入/输出参数</td>
+</tr>
+</tbody>
+</table>
+<h3 id="functiontype-枚举">FunctionType 枚举<a class="headerlink" href="#functiontype-枚举" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>值</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Opaque</code></td>
+<td>未指定的函数类型（默认）</td>
+</tr>
+<tr>
+<td><code>Orchestration</code></td>
+<td>运行在主机/AICPU 上，用于控制流和依赖分析</td>
+</tr>
+<tr>
+<td><code>InCore</code></td>
+<td>AICore 子图执行（未特化）</td>
+</tr>
+<tr>
+<td><code>AIC</code></td>
+<td>Cube 核心内核（特化的 InCore）</td>
+</tr>
+<tr>
+<td><code>AIV</code></td>
+<td>Vector 核心内核（特化的 InCore）</td>
+</tr>
+<tr>
+<td><code>Group</code></td>
+<td>AIC + AIV 内核的协调调度组</td>
+</tr>
+</tbody>
+</table>
+<p><code>IsInCoreType(type)</code> / <code>ir.is_incore_type(type)</code> 对 <code>InCore</code>、<code>AIC</code> 和 <code>AIV</code> 返回 <code>True</code>。</p>
+<h2 id="program-节点">Program 节点<a class="headerlink" href="#program-节点" title="Permanent link">&para;</a></h2>
+<p>包含多个函数的容器，具有确定性排序：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name_</code></td>
+<td>string</td>
+<td>程序名称 (IgnoreField)</td>
+</tr>
+<tr>
+<td><code>functions_</code></td>
+<td>map[GlobalVarPtr, FunctionPtr]</td>
+<td>函数的有序映射</td>
+</tr>
+</tbody>
+</table>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="n">program</span> <span class="o">=</span> <span class="n">ir</span><span class="o">.</span><span class="n">Program</span><span class="p">([</span><span class="n">func1</span><span class="p">,</span> <span class="n">func2</span><span class="p">],</span> <span class="s2">&quot;my_program&quot;</span><span class="p">,</span> <span class="n">span</span><span class="p">)</span>
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a><span class="n">add_func</span> <span class="o">=</span> <span class="n">program</span><span class="o">.</span><span class="n">get_function</span><span class="p">(</span><span class="s2">&quot;add&quot;</span><span class="p">)</span>  <span class="c1"># Access by name</span>
+</span></code></pre></div>
+<p>函数存储在有序映射中，以确保确定性排序。GlobalVar 名称必须与函数名称匹配。</p>
+<h2 id="按类别汇总的节点">按类别汇总的节点<a class="headerlink" href="#按类别汇总的节点" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>类别</th>
+<th>数量</th>
+<th>节点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>基类</strong></td>
+<td>4</td>
+<td>IRNode, Expr, Stmt, Type</td>
+</tr>
+<tr>
+<td><strong>变量</strong></td>
+<td>2</td>
+<td>Var, IterArg</td>
+</tr>
+<tr>
+<td><strong>常量</strong></td>
+<td>3</td>
+<td>ConstInt, ConstFloat, ConstBool</td>
+</tr>
+<tr>
+<td><strong>二元运算</strong></td>
+<td>23</td>
+<td>Add, Sub, Mul, FloorDiv, FloorMod, FloatDiv, Min, Max, Pow, Eq, Ne, Lt, Le, Gt, Ge, And, Or, Xor, BitAnd, BitOr, BitXor, BitShiftLeft, BitShiftRight</td>
+</tr>
+<tr>
+<td><strong>一元运算</strong></td>
+<td>5</td>
+<td>Abs, Neg, Not, BitNot, Cast</td>
+</tr>
+<tr>
+<td><strong>调用/访问</strong></td>
+<td>2</td>
+<td>Call, TupleGetItemExpr</td>
+</tr>
+<tr>
+<td><strong>操作</strong></td>
+<td>2</td>
+<td>Op, GlobalVar</td>
+</tr>
+<tr>
+<td><strong>语句</strong></td>
+<td>11</td>
+<td>AssignStmt, IfStmt, ForStmt, WhileStmt, ReturnStmt, ScopeStmt, YieldStmt, EvalStmt, SeqStmts, BreakStmt, ContinueStmt</td>
+</tr>
+<tr>
+<td><strong>类型</strong></td>
+<td>6</td>
+<td>ScalarType, TensorType, TileType, TupleType, PipeType, UnknownType</td>
+</tr>
+<tr>
+<td><strong>函数</strong></td>
+<td>2</td>
+<td>Function, Program</td>
+</tr>
+</tbody>
+</table>
+<h2 id="相关文档">相关文档<a class="headerlink" href="#相关文档" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../00-overview/">IR 概述</a> - 核心概念与设计原则</li>
+<li><a href="../02-types/">IR 类型与示例</a> - 类型系统详情与示例</li>
+<li><a href="../03-structural_comparison/">结构比较</a> - 相等性和哈希</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/pypto" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

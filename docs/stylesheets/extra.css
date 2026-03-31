@@ -1,0 +1,26 @@
+/* 额外样式 */
+
+/* 代码块 */
+.highlight {
+  margin: 1em 0;
+}
+
+/* 表格 */
+.md-typeset table:not([class]) {
+  font-size: 0.75rem;
+}
+
+/* 导航 */
+.md-nav__title {
+  font-weight: bold;
+}
+
+/* 警告框 */
+.admonition {
+  margin: 1em 0;
+}
+
+/* 代码注释 */
+.code-annotation {
+  font-size: 0.9em;
+}

@@ -1,0 +1,27 @@
+# Build output
+site/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.so
+
+# MkDocs
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+*.temp
+*.log

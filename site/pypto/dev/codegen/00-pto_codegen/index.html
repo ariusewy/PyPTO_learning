@@ -1,0 +1,4956 @@
+
+<!doctype html>
+<html lang="zh" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="PyPTO 编译器学习文档 - 整合 pypto、pto-as、pto-isa 三个项目的中文文档">
+      
+      
+        <meta name="author" content="PyPTO Learner">
+      
+      
+      
+        <link rel="prev" href="../../ir/07-parser/">
+      
+      
+        <link rel="next" href="../01-cce_codegen/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>PTO Codegen - PyPTO 学习文档</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#pto-代码生成-codegen" class="md-skip">
+          跳转至
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="页眉">
+    <a href="../../../.." title="PyPTO 学习文档" class="md-header__button md-logo" aria-label="PyPTO 学习文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            PyPTO 学习文档
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              PTO Codegen
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到深色模式"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="切换到深色模式" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="切换到浅色模式"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="切换到浅色模式" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="搜索" placeholder="搜索" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="查找">
+        
+        <button type="reset" class="md-search__icon md-icon" title="清空当前内容" aria-label="清空当前内容" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            正在初始化搜索引擎
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="标签" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  首页
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../passes/00-pass_manager/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  PyPTO
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../pto-as/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  pto-as
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../../pto-isa/01-overview_zh/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  pto-isa
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="导航栏" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="PyPTO 学习文档" class="md-nav__button md-logo" aria-label="PyPTO 学习文档" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    PyPTO 学习文档
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    首页
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PyPTO
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PyPTO
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/00-pass_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Pass 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Pass 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/00-pass_manager/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/01-unroll_loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UnrollLoops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/02-ctrl_flow_transform/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CtrlFlowTransform
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/03-convert_to_ssa/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ConvertToSSA
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/04-flatten_call_expr/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FlattenCallExpr
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/05-split_chunked_loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SplitChunkedLoops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/06-interchange_chunk_loops/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InterchangeChunkLoops
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/07-outline_incore_scopes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OutlineIncoreScopes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/08-outline_cluster_scopes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OutlineClusterScopes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/10-flatten_tile_nd_to_2d/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FlattenTileNdTo2D
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/12-init_memref/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InitMemRef
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/15-memory_reuse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MemoryReuse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/14-insert_sync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    InsertSync
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/16-utility_passes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Utility Passes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../passes/99-verifier/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Verifier
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IR 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IR 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ir/00-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IR 概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ir/01-hierarchy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    层级结构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ir/02-types/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    类型系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ir/03-structural_comparison/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    结构对比
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ir/04-serialization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    序列化
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ir/05-operators/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    操作符
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ir/06-builder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ir/07-parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Codegen 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Codegen 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO Codegen
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#概述" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        概述
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="概述">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#核心特性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        核心特性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#生成顺序" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        生成顺序
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#架构" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        架构
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="架构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#类结构" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        类结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#实现组件" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现组件
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Python API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#基本用法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基本用法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#直接访问代码生成器" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        直接访问代码生成器
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#操作映射" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        操作映射
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="操作映射">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tile-操作到-pto-指令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tile 操作到 PTO 指令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#跨核操作到-pto-指令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        跨核操作到 PTO 指令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数类型处理" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数类型处理
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#代码生成细节" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码生成细节
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="代码生成细节">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#张量视图生成" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        张量视图生成
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#分配生成" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分配生成
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#加载操作转换" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        加载操作转换
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#存储操作转换" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        存储操作转换
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#计算操作" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        计算操作
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="计算操作">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#示例-tile-乘法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        示例: Tile 乘法
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#完整示例" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        完整示例
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="完整示例">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#输入-pypto-程序" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输入: PyPTO 程序
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#输出-pto-isa-mlir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出: PTO-ISA MLIR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#变量映射" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        变量映射
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="变量映射">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#内部跟踪" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内部跟踪
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#基于-memref-的解析" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基于 MemRef 的解析
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#类型转换" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        类型转换
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="类型转换">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#数据类型映射" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        数据类型映射
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#内存空间映射" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内存空间映射
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tile-缓冲区属性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tile 缓冲区属性
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#内核包装器生成-pto-后端" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内核包装器生成 (PTO 后端)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="内核包装器生成 (PTO 后端)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#流水线" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        流水线
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#输出结构" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数解包" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数解包
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#实现" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#另请参阅" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        另请参阅
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../01-cce_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    CCE Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../02-orchestration_codegen/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Orchestration Codegen
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Language 文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Language 文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../language/00-python_syntax/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python 语法
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6" id="__nav_2_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    参考文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    参考文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_6_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_6_1" id="__nav_2_6_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO-ISA 参考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_6_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_6_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    PTO-ISA 参考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/pto-isa/00-cluster_architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cluster 架构
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/pto-isa/01-tpush_tpop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TPUSH/TPOP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../reference/pto-isa/02-buffer_management/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Buffer 管理
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../../pto-as/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pto-as
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    pto-as
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    入门
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    入门
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/01-overview/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PTO IR 概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/no_npu_compile_only_guide_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    无 NPU 编译指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    参考
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    参考
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/02-type-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    类型系统
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/03-enums-attrs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    枚举与属性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/04-operations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    操作参考
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/PTO_IR_manual/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    完整 PTO IR 手册
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/05-passes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端 Pass
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_4" id="__nav_3_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    操作详解
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    操作详解
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/README_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/elementwise-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    逐元素操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/tile-scalar-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tile-标量操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/axis-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    轴归约扩展
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/memory-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内存操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/matrix-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    矩阵操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/data-movement-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    数据搬运
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/complex-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    复杂操作
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/scalar-arith-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    标量算术
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/operations/control-flow-ops_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    控制流
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_5" id="__nav_3_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    设计文档
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    设计文档
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-as/designs/ptoas-tpush-tpop-design/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TPUSH/TPOP 设计
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pto-isa
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    pto-isa
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/01-overview_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    概述
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/02-machine-model_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    机器模型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/03-state-and-types_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    状态与类型
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/04-tiles-and-globaltensor_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tile 与 GlobalTensor
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/05-synchronization_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    同步机制
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/06-assembly_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    汇编语言
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/07-instructions_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指令集
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/08-programming_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    编程指南
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/09-virtual-isa-and-ir_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    虚拟 ISA 与 IR
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/10-bytecode-and-toolchain_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    字节码与工具链
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/11-memory-ordering-and-consistency_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    内存顺序与一致性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/12-backend-profiles-and-conformance_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    后端配置与一致性
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4_13" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_13" id="__nav_4_13_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    附录
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    附录
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/appendix-a-glossary_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    术语表
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/appendix-b-instruction-contract-template_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指令契约模板
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/appendix-c-diagnostics-taxonomy_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    诊断分类
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../pto-isa/appendix-d-instruction-family-matrix_zh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    指令族矩阵
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="目录">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      目录
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#概述" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        概述
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="概述">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#核心特性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        核心特性
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#生成顺序" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        生成顺序
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#架构" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        架构
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="架构">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#类结构" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        类结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#实现组件" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现组件
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#python-api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python API
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Python API">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#基本用法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基本用法
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#直接访问代码生成器" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        直接访问代码生成器
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#操作映射" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        操作映射
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="操作映射">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#tile-操作到-pto-指令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tile 操作到 PTO 指令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#跨核操作到-pto-指令" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        跨核操作到 PTO 指令
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数类型处理" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数类型处理
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#代码生成细节" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        代码生成细节
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="代码生成细节">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#张量视图生成" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        张量视图生成
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#分配生成" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分配生成
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#加载操作转换" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        加载操作转换
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#存储操作转换" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        存储操作转换
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#计算操作" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        计算操作
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="计算操作">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#示例-tile-乘法" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        示例: Tile 乘法
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#完整示例" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        完整示例
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="完整示例">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#输入-pypto-程序" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输入: PyPTO 程序
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#输出-pto-isa-mlir" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出: PTO-ISA MLIR
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#变量映射" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        变量映射
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="变量映射">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#内部跟踪" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内部跟踪
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#基于-memref-的解析" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        基于 MemRef 的解析
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#类型转换" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        类型转换
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="类型转换">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#数据类型映射" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        数据类型映射
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#内存空间映射" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内存空间映射
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tile-缓冲区属性" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tile 缓冲区属性
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#内核包装器生成-pto-后端" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        内核包装器生成 (PTO 后端)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="内核包装器生成 (PTO 后端)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#流水线" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        流水线
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#输出结构" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        输出结构
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#参数解包" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        参数解包
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#实现" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        实现
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#另请参阅" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        另请参阅
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="pto-代码生成-codegen">PTO 代码生成 (CodeGen)<a class="headerlink" href="#pto-代码生成-codegen" title="Permanent link">&para;</a></h1>
+<p>PTO 代码生成 (CodeGen) (<code>PTOCodegen</code>) 从 PyPTO 中间表示 (IR) 生成 PTO-ISA 方言的 MLIR 代码。它将高层 PyPTO 程序转换为适合加速器执行的低层 PTO 指令。</p>
+<h2 id="概述">概述<a class="headerlink" href="#概述" title="Permanent link">&para;</a></h2>
+<h3 id="核心特性">核心特性<a class="headerlink" href="#核心特性" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>自动 MLIR 生成</strong>: 将 PyPTO IR 转换为 PTO-ISA MLIR 方言</li>
+<li><strong>结构化代码生成 (CodeGen)</strong>: 按顺序输出常量、张量 (Tensor) 视图和分配</li>
+<li><strong>隐式降级</strong>: 从 <code>tile.load</code>/<code>tile.store</code> 自动生成 <code>pto.partition_view</code></li>
+<li><strong>基于 Tile 变量的分配</strong>: 为每个 Tile 变量生成带显式 <code>addr</code> 的 <code>pto.alloc_tile</code> 操作</li>
+<li><strong>类型 (Type) 感知转换</strong>: 从 TileType 元数据推导 tile_buf/tensor_view 类型</li>
+<li><strong>PTOAS 类型标注</strong>: 为所有操作生成带类型的 <code>ins</code>/<code>outs</code> 子句</li>
+</ul>
+<h3 id="生成顺序">生成顺序<a class="headerlink" href="#生成顺序" title="Permanent link">&para;</a></h3>
+<p>代码生成按以下固定顺序生成 MLIR:</p>
+<ol>
+<li><strong>常量</strong>: 索引和浮点值的 <code>arith.constant</code></li>
+<li><strong>张量视图</strong>: 所有张量参数的 <code>pto.make_tensor_view</code></li>
+<li><strong>分配</strong>: 所有 Tile 变量的 <code>pto.alloc_tile</code> (按变量维度, 带 <code>addr</code> 属性)</li>
+<li><strong>操作</strong>: 包含加载、计算、存储操作的函数体</li>
+</ol>
+<h2 id="架构">架构<a class="headerlink" href="#架构" title="Permanent link">&para;</a></h2>
+<h3 id="类结构">类结构<a class="headerlink" href="#类结构" title="Permanent link">&para;</a></h3>
+<p><strong>头文件</strong>: <code>include/pypto/codegen/pto/pto_codegen.h</code></p>
+<div class="language-cpp highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">namespace</span><span class="w"> </span><span class="nn">pypto</span><span class="o">::</span><span class="nn">codegen</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="k">class</span><span class="w"> </span><span class="nc">PTOCodegen</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">CodegenBase</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w"> </span><span class="k">public</span><span class="o">:</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">  </span><span class="n">PTOCodegen</span><span class="p">();</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">  </span><span class="k">explicit</span><span class="w"> </span><span class="n">PTOCodegen</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">backend</span><span class="o">::</span><span class="n">Backend</span><span class="o">*</span><span class="w"> </span><span class="n">backend</span><span class="p">);</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">Generate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">ir</span><span class="o">::</span><span class="n">ProgramPtr</span><span class="o">&amp;</span><span class="w"> </span><span class="n">program</span><span class="p">);</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="w">  </span><span class="c1">// CodegenBase interface</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetCurrentResultTarget</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="kt">void</span><span class="w"> </span><span class="nf">Emit</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">line</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetExprAsCode</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">ir</span><span class="o">::</span><span class="n">ExprPtr</span><span class="o">&amp;</span><span class="w"> </span><span class="n">expr</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetTypeString</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">DataType</span><span class="o">&amp;</span><span class="w"> </span><span class="n">dtype</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="w">  </span><span class="c1">// PTO-specific helpers for operator codegen</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">NewTemp</span><span class="p">();</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetOrCreateTensorView</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">ir</span><span class="o">::</span><span class="n">VarPtr</span><span class="o">&amp;</span><span class="w"> </span><span class="n">tensor</span><span class="p">);</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetIndexConstant</span><span class="p">(</span><span class="kt">int64_t</span><span class="w"> </span><span class="n">val</span><span class="p">);</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="n">GetOrEmitFloatConstant</span><span class="p">(</span><span class="kt">double</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">&amp;</span><span class="w"> </span><span class="n">mlir_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;f32&quot;</span><span class="p">);</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetTensorViewTypeString</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">ir</span><span class="o">::</span><span class="n">TensorType</span><span class="o">*</span><span class="w"> </span><span class="n">tensor_type</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetTileBufTypeString</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">ir</span><span class="o">::</span><span class="n">MemRef</span><span class="o">*</span><span class="w"> </span><span class="n">memref</span><span class="p">)</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetExprTypeAnnotation</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">ir</span><span class="o">::</span><span class="n">ExprPtr</span><span class="o">&amp;</span><span class="w"> </span><span class="n">expr</span><span class="p">);</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="w">  </span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="w"> </span><span class="nf">GetCurrentResultTileBufTypeString</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="p">;</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="p">};</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="p">}</span><span class="w">  </span><span class="c1">// namespace codegen</span>
+</span></code></pre></div>
+<h3 id="实现组件">实现组件<a class="headerlink" href="#实现组件" title="Permanent link">&para;</a></h3>
+<p><strong>文件</strong>: <code>src/codegen/pto/pto_codegen.cpp</code></p>
+<table>
+<thead>
+<tr>
+<th>组件</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PTOCodegen</code></td>
+<td>主访问者类 (继承 <code>CodegenBase</code>), 用于 IR 遍历</td>
+</tr>
+<tr>
+<td><code>MemRefCollectorVisitor</code></td>
+<td>收集 MemRef 对象及其关联的 TileType 用于分配</td>
+</tr>
+<tr>
+<td>辅助函数</td>
+<td><code>DataTypeToMLIRImpl()</code>, <code>MemorySpaceToMLIR()</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="python-api">Python API<a class="headerlink" href="#python-api" title="Permanent link">&para;</a></h2>
+<h3 id="基本用法">基本用法<a class="headerlink" href="#基本用法" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pypto.ir</span><span class="w"> </span><span class="kn">import</span> <span class="nb">compile</span><span class="p">,</span> <span class="n">OptimizationStrategy</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pypto.backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">BackendType</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pypto.language</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">program</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="k">class</span><span class="w"> </span><span class="nc">MyKernel</span><span class="p">:</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">vector_add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>                   <span class="n">a</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">],</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>                   <span class="n">b</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]):</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>        <span class="n">tile_a</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">])</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>        <span class="n">tile_b</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">])</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>        <span class="n">tile_c</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tile_a</span><span class="p">,</span> <span class="n">tile_b</span><span class="p">)</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>        <span class="n">pl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">tile_c</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">a</span><span class="p">)</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1"># Compile with PTO backend and PTOAS optimization</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="n">output_dir</span> <span class="o">=</span> <span class="nb">compile</span><span class="p">(</span><span class="n">MyKernel</span><span class="p">,</span> <span class="n">strategy</span><span class="o">=</span><span class="n">OptimizationStrategy</span><span class="o">.</span><span class="n">PTOAS</span><span class="p">,</span> <span class="n">backend_type</span><span class="o">=</span><span class="n">BackendType</span><span class="o">.</span><span class="n">Ascend910B_PTO</span><span class="p">)</span>
+</span></code></pre></div>
+<p><code>compile()</code> 函数会自动应用选定的优化策略, 并根据 <code>backend_type</code> 调用相应的代码生成器。</p>
+<h3 id="直接访问代码生成器">直接访问代码生成器<a class="headerlink" href="#直接访问代码生成器" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="kn">from</span><span class="w"> </span><span class="nn">pypto.pypto_core</span><span class="w"> </span><span class="kn">import</span> <span class="n">codegen</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="c1"># After pass transformations</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="n">pto_codegen</span> <span class="o">=</span> <span class="n">codegen</span><span class="o">.</span><span class="n">PTOCodegen</span><span class="p">()</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="n">pto_code</span> <span class="o">=</span> <span class="n">pto_codegen</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">transformed_program</span><span class="p">)</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="nb">print</span><span class="p">(</span><span class="n">pto_code</span><span class="p">)</span>
+</span></code></pre></div>
+<h2 id="操作映射">操作映射<a class="headerlink" href="#操作映射" title="Permanent link">&para;</a></h2>
+<h3 id="tile-操作到-pto-指令">Tile 操作到 PTO 指令<a class="headerlink" href="#tile-操作到-pto-指令" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>PyPTO 操作</th>
+<th>生成的 PTO-ISA</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tile.load(tensor, [row, col], [h, w])</code></td>
+<td><code>pto.partition_view</code> + <code>pto.tload</code></td>
+</tr>
+<tr>
+<td><code>tile.store(tile, [row, col], tensor)</code></td>
+<td><code>pto.partition_view</code> + <code>pto.tstore</code></td>
+</tr>
+<tr>
+<td><code>tile.mul(lhs, rhs)</code></td>
+<td><code>pto.tmul</code></td>
+</tr>
+<tr>
+<td><code>tile.add(a, b, c)</code></td>
+<td><code>pto.taddc</code> (三操作数加法)</td>
+</tr>
+<tr>
+<td><code>tile.adds(tile, scalar)</code></td>
+<td><code>pto.tadds</code> (Tile + 标量)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="跨核操作到-pto-指令">跨核操作到 PTO 指令<a class="headerlink" href="#跨核操作到-pto-指令" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>PyPTO 操作</th>
+<th>生成的 PTO-ISA</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>tile.tpush_to_aiv(tile, aiv_idx=N)</code></td>
+<td><code>pto.tpush_to_aiv ins(%tile : type) {aiv_idx = N}</code></td>
+<td>Cube → Vector 推送</td>
+</tr>
+<tr>
+<td><code>tile.tpush_to_aic(tile, aiv_idx=N)</code></td>
+<td><code>pto.tpush_to_aic ins(%tile : type) {aiv_idx = N}</code></td>
+<td>Vector → Cube 推送</td>
+</tr>
+<tr>
+<td><code>tile.tpop_from_aic(aiv_idx=N)</code></td>
+<td><code>pto.tpop_from_aic outs(%buf : type) {aiv_idx = N}</code></td>
+<td>从 Cube 管道弹出</td>
+</tr>
+<tr>
+<td><code>tile.tpop_from_aiv(aiv_idx=N)</code></td>
+<td><code>pto.tpop_from_aiv outs(%buf : type) {aiv_idx = N}</code></td>
+<td>从 Vector 管道弹出</td>
+</tr>
+<tr>
+<td><code>system.tfree_to_aic(aiv_idx=N)</code></td>
+<td><code>pto.tfree_to_aic {aiv_idx = N}</code></td>
+<td>释放槽位给 Cube</td>
+</tr>
+<tr>
+<td><code>system.tfree_to_aiv(aiv_idx=N)</code></td>
+<td><code>pto.tfree_to_aiv {aiv_idx = N}</code></td>
+<td>释放槽位给 Vector</td>
+</tr>
+<tr>
+<td><code>system.aic_initialize_pipe(...)</code></td>
+<td><code>pto.aic_initialize_pipe {dir_mask = D, slot_size = S, ...}</code></td>
+<td>Cube 管道初始化</td>
+</tr>
+<tr>
+<td><code>system.aiv_initialize_pipe(...)</code></td>
+<td><code>pto.aiv_initialize_pipe {dir_mask = D, slot_size = S, ...}</code></td>
+<td>Vector 管道初始化</td>
+</tr>
+<tr>
+<td><code>system.reserve_buffer(...)</code></td>
+<td><code>pto.reserve_buffer {name = "N", size = S, base = B}</code></td>
+<td>预留缓冲区</td>
+</tr>
+<tr>
+<td><code>system.import_peer_buffer(...)</code></td>
+<td><code>pto.import_peer_buffer {name = "N", peer_func = "F"}</code></td>
+<td>导入对等缓冲区</td>
+</tr>
+</tbody>
+</table>
+<p><strong>说明：</strong></p>
+<ul>
+<li>Push 操作使用带类型的 <code>ins()</code> 子句；Pop 操作使用 <code>outs()</code> 子句</li>
+<li><code>initialize_pipe</code> 仅在值 ≥ 0（即非 AUTO）时输出 <code>c2v_consumer_buf</code>/<code>v2c_consumer_buf</code></li>
+<li><code>reserve_buffer</code> 在 base 为 AUTO (-1) 时输出 <code>base = auto</code>，显式地址时输出 <code>base = &lt;value&gt;</code></li>
+<li>缓冲区名称和 peer_func 字符串由 <code>CheckSafeIdentifier</code> 验证（仅允许字母数字和下划线）</li>
+</ul>
+<h3 id="参数类型处理">参数类型处理<a class="headerlink" href="#参数类型处理" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>PyPTO 类型</th>
+<th>MLIR 参数类型</th>
+<th>后处理</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TensorType</code></td>
+<td><code>!pto.ptr&lt;dtype&gt;</code></td>
+<td>生成 <code>pto.make_tensor_view</code></td>
+</tr>
+<tr>
+<td><code>ScalarType</code></td>
+<td><code>dtype</code> (如 <code>f32</code>)</td>
+<td>直接用作 <code>%argN</code></td>
+</tr>
+<tr>
+<td><code>TileType</code></td>
+<td>不允许作为参数</td>
+<td>必须在内部计算</td>
+</tr>
+</tbody>
+</table>
+<h2 id="代码生成细节">代码生成细节<a class="headerlink" href="#代码生成细节" title="Permanent link">&para;</a></h2>
+<h3 id="张量视图生成">张量视图生成<a class="headerlink" href="#张量视图生成" title="Permanent link">&para;</a></h3>
+<p>对于每个 <code>TensorType</code> 参数, 代码生成器会生成:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>%0 = pto.make_tensor_view %arg0,
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>     shape = [%c32, %c32]
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>     strides = [%c32, %c1]
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>     : !pto.tensor_view&lt;?x?xf32&gt;
+</span></code></pre></div>
+<p><strong>关键要点</strong>:</p>
+<ul>
+<li>形状来自 <code>TensorType.shape_</code></li>
+<li>步幅按行主序计算: 二维张量为 <code>[dim1, 1]</code></li>
+<li>常量 (<code>%c32</code>, <code>%c1</code>) 自动生成</li>
+<li>张量视图类型每个维度使用 <code>?</code> (如二维为 <code>?x?xf32</code>)</li>
+</ul>
+<h3 id="分配生成">分配生成<a class="headerlink" href="#分配生成" title="Permanent link">&para;</a></h3>
+<p>基于附加到 TileType 变量的 MemRef 对象。代码生成器从关联的 TileType 推导 Tile 维度和数据类型:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>%mi_tile = pto.alloc_tile addr = %c8320 : !pto.tile_buf&lt;loc=vec, dtype=f32, rows=16, cols=1,
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>                       v_row=16, v_col=1, blayout=col_major,
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>                       slayout=none_box, fractal=512, pad=0&gt;
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a>%mi_tile_nd = pto.alloc_tile addr = %c8320 : !pto.tile_buf&lt;loc=vec, dtype=f32, rows=1, cols=16,
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>                       v_row=1, v_col=16, blayout=row_major,
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>                       slayout=none_box, fractal=512, pad=0&gt;
+</span></code></pre></div>
+<p><strong>Tile 变量到 alloc_tile 的映射</strong>:</p>
+<ul>
+<li>内存空间 (<code>TileType.memory_space_</code>) 映射到 <code>loc</code> 属性 (使用 PTO 地址空间名)</li>
+<li>Tile 数据类型和维度从每个变量自身的 TileType 元数据推导</li>
+<li>每个 Tile 变量对应一次分配 (不是每个唯一 MemRef)</li>
+<li><code>addr</code> 属性来自 <code>MemRef.addr_</code>，输出为 <code>arith.constant ... : i64</code></li>
+<li>共享同一 MemRef 的变量共享相同的 <code>addr</code> SSA 值</li>
+</ul>
+<h3 id="加载操作转换">加载操作转换<a class="headerlink" href="#加载操作转换" title="Permanent link">&para;</a></h3>
+<p><strong>PyPTO IR</strong>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="n">tile_a</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tensor_a</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">])</span>
+</span></code></pre></div>
+<p><strong>生成的 MLIR</strong> (两个操作):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a># 1. Create partition view
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>%3 = pto.partition_view %tensor_view, offsets = [%c0, %c0],
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>                 sizes = [%c32, %c32]
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>                 : !pto.tensor_view&lt;?x?xf32&gt; -&gt; !pto.partition_tensor_view&lt;32x32xf32&gt;
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>
+</span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a># 2. Load into tile buffer
+</span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>pto.tload ins(%3 : !pto.partition_tensor_view&lt;32x32xf32&gt;)
+</span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>          outs(%tile_buf : !pto.tile_buf&lt;loc=vec, ...&gt;)
+</span></code></pre></div>
+<p><strong>关键转换</strong>:</p>
+<ul>
+<li>张量参数通过 tensor_view 查找</li>
+<li>偏移/大小来自 <code>tile.load</code> 参数</li>
+<li>输出 tile_buf 来自变量的 MemRef, 类型从 TileType 推导</li>
+</ul>
+<h3 id="存储操作转换">存储操作转换<a class="headerlink" href="#存储操作转换" title="Permanent link">&para;</a></h3>
+<p><strong>PyPTO IR</strong>:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="n">pl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">tile_c</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">tensor_out</span><span class="p">)</span>
+</span></code></pre></div>
+<p><strong>生成的 MLIR</strong>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a># 1. Create partition view for output
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>%5 = pto.partition_view %output_view, offsets = [%c0, %c0],
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>                 sizes = [%c32, %c32]
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>                 : !pto.tensor_view&lt;?x?xf32&gt; -&gt; !pto.partition_tensor_view&lt;32x32xf32&gt;
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a># 2. Store from tile buffer
+</span><span id="__span-8-7"><a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>pto.tstore ins(%tile_buf : !pto.tile_buf&lt;loc=vec, ...&gt;)
+</span><span id="__span-8-8"><a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>           outs(%5 : !pto.partition_tensor_view&lt;32x32xf32&gt;)
+</span></code></pre></div>
+<h3 id="计算操作">计算操作<a class="headerlink" href="#计算操作" title="Permanent link">&para;</a></h3>
+<h4 id="示例-tile-乘法">示例: Tile 乘法<a class="headerlink" href="#示例-tile-乘法" title="Permanent link">&para;</a></h4>
+<p>PyPTO:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="n">tile_c</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="n">tile_a</span><span class="p">,</span> <span class="n">tile_b</span><span class="p">)</span>
+</span></code></pre></div>
+<p>MLIR:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>pto.tmul ins(%tile_a_buf : !pto.tile_buf&lt;...&gt;,
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>             %tile_b_buf : !pto.tile_buf&lt;...&gt;)
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>         outs(%tile_c_buf : !pto.tile_buf&lt;...&gt;)
+</span></code></pre></div>
+<p><strong>结果处理</strong>:</p>
+<ul>
+<li>结果变量的 MemRef 决定输出 tile_buf</li>
+<li>输入操作数通过变量名查找解析</li>
+<li>所有 <code>ins</code>/<code>outs</code> 子句包含类型标注</li>
+</ul>
+<h2 id="完整示例">完整示例<a class="headerlink" href="#完整示例" title="Permanent link">&para;</a></h2>
+<h3 id="输入-pypto-程序">输入: PyPTO 程序<a class="headerlink" href="#输入-pypto-程序" title="Permanent link">&para;</a></h3>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="kn">import</span><span class="w"> </span><span class="nn">pypto.language</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pl</span>
+</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>
+</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a><span class="nd">@pl</span><span class="o">.</span><span class="n">program</span>
+</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="k">class</span><span class="w"> </span><span class="nc">MulKernel</span><span class="p">:</span>
+</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>    <span class="nd">@pl</span><span class="o">.</span><span class="n">function</span>
+</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>    <span class="k">def</span><span class="w"> </span><span class="nf">mul_kernel_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a>                     <span class="n">a</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">],</span>
+</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a>                     <span class="n">b</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">],</span>
+</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>                     <span class="n">c</span><span class="p">:</span> <span class="n">pl</span><span class="o">.</span><span class="n">Tensor</span><span class="p">[[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">],</span> <span class="n">pl</span><span class="o">.</span><span class="n">FP32</span><span class="p">]):</span>
+</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>        <span class="c1"># Load tiles</span>
+</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a>        <span class="n">tile_a</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">])</span>
+</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a>        <span class="n">tile_b</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">])</span>
+</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>
+</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>        <span class="c1"># Multiply</span>
+</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a>        <span class="n">tile_c</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="n">tile_a</span><span class="p">,</span> <span class="n">tile_b</span><span class="p">)</span>
+</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a>
+</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>        <span class="c1"># Store result</span>
+</span><span id="__span-11-18"><a id="__codelineno-11-18" name="__codelineno-11-18" href="#__codelineno-11-18"></a>        <span class="n">pl</span><span class="o">.</span><span class="n">store</span><span class="p">(</span><span class="n">tile_c</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">)</span>
+</span></code></pre></div>
+<h3 id="输出-pto-isa-mlir">输出: PTO-ISA MLIR<a class="headerlink" href="#输出-pto-isa-mlir" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>module {
+</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>  func.func @mul_kernel_2d(%arg0: !pto.ptr&lt;f32&gt;,
+</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>                          %arg1: !pto.ptr&lt;f32&gt;,
+</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>                          %arg2: !pto.ptr&lt;f32&gt;) {
+</span><span id="__span-12-5"><a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>    // Constants
+</span><span id="__span-12-6"><a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>    %c32 = arith.constant 32 : index
+</span><span id="__span-12-7"><a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>    %c1 = arith.constant 1 : index
+</span><span id="__span-12-8"><a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>    %c0 = arith.constant 0 : index
+</span><span id="__span-12-9"><a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+</span><span id="__span-12-10"><a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>    // Tensor views
+</span><span id="__span-12-11"><a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>    %3 = pto.make_tensor_view %arg0, shape = [%c32, %c32]
+</span><span id="__span-12-12"><a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>         strides = [%c32, %c1] : !pto.tensor_view&lt;?x?xf32&gt;
+</span><span id="__span-12-13"><a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>    %4 = pto.make_tensor_view %arg1, shape = [%c32, %c32]
+</span><span id="__span-12-14"><a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>         strides = [%c32, %c1] : !pto.tensor_view&lt;?x?xf32&gt;
+</span><span id="__span-12-15"><a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>    %5 = pto.make_tensor_view %arg2, shape = [%c32, %c32]
+</span><span id="__span-12-16"><a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>         strides = [%c32, %c1] : !pto.tensor_view&lt;?x?xf32&gt;
+</span><span id="__span-12-17"><a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>
+</span><span id="__span-12-18"><a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>    // Allocations
+</span><span id="__span-12-19"><a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>    %0 = pto.alloc_tile : !pto.tile_buf&lt;loc=vec, dtype=f32, rows=32, cols=32, ...&gt;
+</span><span id="__span-12-20"><a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>    %1 = pto.alloc_tile : !pto.tile_buf&lt;loc=vec, dtype=f32, rows=32, cols=32, ...&gt;
+</span><span id="__span-12-21"><a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>    %2 = pto.alloc_tile : !pto.tile_buf&lt;loc=vec, dtype=f32, rows=32, cols=32, ...&gt;
+</span><span id="__span-12-22"><a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>
+</span><span id="__span-12-23"><a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>    // Load tile_a
+</span><span id="__span-12-24"><a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>    %6 = pto.partition_view %3, offsets = [%c0, %c0], sizes = [%c32, %c32]
+</span><span id="__span-12-25"><a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>         : !pto.tensor_view&lt;?x?xf32&gt; -&gt; !pto.partition_tensor_view&lt;32x32xf32&gt;
+</span><span id="__span-12-26"><a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>    pto.tload ins(%6 : !pto.partition_tensor_view&lt;32x32xf32&gt;)
+</span><span id="__span-12-27"><a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>              outs(%0 : !pto.tile_buf&lt;...&gt;)
+</span><span id="__span-12-28"><a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>
+</span><span id="__span-12-29"><a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>    // Load tile_b
+</span><span id="__span-12-30"><a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>    %7 = pto.partition_view %4, offsets = [%c0, %c0], sizes = [%c32, %c32]
+</span><span id="__span-12-31"><a id="__codelineno-12-31" name="__codelineno-12-31" href="#__codelineno-12-31"></a>         : !pto.tensor_view&lt;?x?xf32&gt; -&gt; !pto.partition_tensor_view&lt;32x32xf32&gt;
+</span><span id="__span-12-32"><a id="__codelineno-12-32" name="__codelineno-12-32" href="#__codelineno-12-32"></a>    pto.tload ins(%7 : !pto.partition_tensor_view&lt;32x32xf32&gt;)
+</span><span id="__span-12-33"><a id="__codelineno-12-33" name="__codelineno-12-33" href="#__codelineno-12-33"></a>              outs(%1 : !pto.tile_buf&lt;...&gt;)
+</span><span id="__span-12-34"><a id="__codelineno-12-34" name="__codelineno-12-34" href="#__codelineno-12-34"></a>
+</span><span id="__span-12-35"><a id="__codelineno-12-35" name="__codelineno-12-35" href="#__codelineno-12-35"></a>    // Multiply
+</span><span id="__span-12-36"><a id="__codelineno-12-36" name="__codelineno-12-36" href="#__codelineno-12-36"></a>    pto.tmul ins(%0 : !pto.tile_buf&lt;...&gt;, %1 : !pto.tile_buf&lt;...&gt;)
+</span><span id="__span-12-37"><a id="__codelineno-12-37" name="__codelineno-12-37" href="#__codelineno-12-37"></a>             outs(%2 : !pto.tile_buf&lt;...&gt;)
+</span><span id="__span-12-38"><a id="__codelineno-12-38" name="__codelineno-12-38" href="#__codelineno-12-38"></a>
+</span><span id="__span-12-39"><a id="__codelineno-12-39" name="__codelineno-12-39" href="#__codelineno-12-39"></a>    // Store tile_c
+</span><span id="__span-12-40"><a id="__codelineno-12-40" name="__codelineno-12-40" href="#__codelineno-12-40"></a>    %8 = pto.partition_view %5, offsets = [%c0, %c0], sizes = [%c32, %c32]
+</span><span id="__span-12-41"><a id="__codelineno-12-41" name="__codelineno-12-41" href="#__codelineno-12-41"></a>         : !pto.tensor_view&lt;?x?xf32&gt; -&gt; !pto.partition_tensor_view&lt;32x32xf32&gt;
+</span><span id="__span-12-42"><a id="__codelineno-12-42" name="__codelineno-12-42" href="#__codelineno-12-42"></a>    pto.tstore ins(%2 : !pto.tile_buf&lt;...&gt;)
+</span><span id="__span-12-43"><a id="__codelineno-12-43" name="__codelineno-12-43" href="#__codelineno-12-43"></a>               outs(%8 : !pto.partition_tensor_view&lt;32x32xf32&gt;)
+</span><span id="__span-12-44"><a id="__codelineno-12-44" name="__codelineno-12-44" href="#__codelineno-12-44"></a>
+</span><span id="__span-12-45"><a id="__codelineno-12-45" name="__codelineno-12-45" href="#__codelineno-12-45"></a>    return
+</span><span id="__span-12-46"><a id="__codelineno-12-46" name="__codelineno-12-46" href="#__codelineno-12-46"></a>  }
+</span><span id="__span-12-47"><a id="__codelineno-12-47" name="__codelineno-12-47" href="#__codelineno-12-47"></a>}
+</span></code></pre></div>
+<h2 id="变量映射">变量映射<a class="headerlink" href="#变量映射" title="Permanent link">&para;</a></h2>
+<h3 id="内部跟踪">内部跟踪<a class="headerlink" href="#内部跟踪" title="Permanent link">&para;</a></h3>
+<p>代码生成器维护多个映射来跟踪 MLIR 变量名:</p>
+<table>
+<thead>
+<tr>
+<th>映射</th>
+<th>用途</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>var_to_mlir_</code></td>
+<td>IR 变量到 MLIR 静态单赋值 (SSA) 名</td>
+<td><code>"tile_a"</code> -&gt; <code>"%0"</code></td>
+</tr>
+<tr>
+<td><code>tensor_to_view_</code></td>
+<td>参数到 tensor_view</td>
+<td><code>"a"</code> -&gt; <code>"%3"</code></td>
+</tr>
+<tr>
+<td><code>memref_to_mlir_</code></td>
+<td>MemRef 指针到 tile_buf</td>
+<td><code>memref.get()</code> -&gt; <code>"%0"</code></td>
+</tr>
+<tr>
+<td><code>memref_to_tile_type_</code></td>
+<td>MemRef 指针到 TileType</td>
+<td>用于推导 tile_buf 类型</td>
+</tr>
+</tbody>
+</table>
+<p><strong>SSA 值命名</strong>:</p>
+<ul>
+<li>参数: <code>%arg0</code>, <code>%arg1</code>, <code>%arg2</code>, ...</li>
+<li>常量: <code>%c0</code>, <code>%c1</code>, <code>%c32</code>, <code>%cst</code>, ...</li>
+<li>结果: <code>%0</code>, <code>%1</code>, <code>%2</code>, ...</li>
+</ul>
+<h3 id="基于-memref-的解析">基于 MemRef 的解析<a class="headerlink" href="#基于-memref-的解析" title="Permanent link">&para;</a></h3>
+<p>对于 <code>tile.mul</code> 等操作:</p>
+<div class="language-python highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="n">tile_c</span> <span class="o">=</span> <span class="n">pl</span><span class="o">.</span><span class="n">mul</span><span class="p">(</span><span class="n">tile_a</span><span class="p">,</span> <span class="n">tile_b</span><span class="p">)</span>
+</span></code></pre></div>
+<p>代码生成器:</p>
+<ol>
+<li>通过 <code>var_to_mlir_</code> 解析 <code>tile_a</code> -&gt; <code>%0</code></li>
+<li>通过 <code>var_to_mlir_</code> 解析 <code>tile_b</code> -&gt; <code>%1</code></li>
+<li>从 TileType 获取 <code>tile_c</code> 的 MemRef</li>
+<li>通过 <code>memref_to_mlir_</code> 映射 MemRef -&gt; <code>%2</code></li>
+<li>从 <code>memref_to_tile_type_</code> 获取 tile_buf 类型</li>
+<li>生成: <code>pto.tmul ins(%0 : !pto.tile_buf&lt;...&gt;, %1 : !pto.tile_buf&lt;...&gt;) outs(%2 : !pto.tile_buf&lt;...&gt;)</code></li>
+</ol>
+<h2 id="类型转换">类型转换<a class="headerlink" href="#类型转换" title="Permanent link">&para;</a></h2>
+<h3 id="数据类型映射">数据类型映射<a class="headerlink" href="#数据类型映射" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>PyPTO 数据类型</th>
+<th>MLIR 类型</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DataType::FP32</code></td>
+<td><code>f32</code></td>
+</tr>
+<tr>
+<td><code>DataType::FP16</code></td>
+<td><code>f16</code></td>
+</tr>
+<tr>
+<td><code>DataType::BF16</code></td>
+<td><code>bf16</code></td>
+</tr>
+<tr>
+<td><code>DataType::INT32</code></td>
+<td><code>i32</code></td>
+</tr>
+<tr>
+<td><code>DataType::INT64</code></td>
+<td><code>i64</code></td>
+</tr>
+<tr>
+<td><code>DataType::INT8</code></td>
+<td><code>i8</code></td>
+</tr>
+<tr>
+<td><code>DataType::UINT8</code></td>
+<td><code>ui8</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="内存空间映射">内存空间映射<a class="headerlink" href="#内存空间映射" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>PyPTO 内存空间</th>
+<th>PTO 地址空间</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MemorySpace::DDR</code></td>
+<td><code>gm</code> (全局内存)</td>
+</tr>
+<tr>
+<td><code>MemorySpace::Vec</code></td>
+<td><code>vec</code> (向量缓冲区)</td>
+</tr>
+<tr>
+<td><code>MemorySpace::Mat</code></td>
+<td><code>mat</code> (矩阵缓冲区)</td>
+</tr>
+<tr>
+<td><code>MemorySpace::Left</code></td>
+<td><code>left</code></td>
+</tr>
+<tr>
+<td><code>MemorySpace::Right</code></td>
+<td><code>right</code></td>
+</tr>
+<tr>
+<td><code>MemorySpace::Acc</code></td>
+<td><code>acc</code> (累加器)</td>
+</tr>
+<tr>
+<td><code>MemorySpace::Bias</code></td>
+<td><code>bias</code> (偏置缓冲区)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tile-缓冲区属性">Tile 缓冲区属性<a class="headerlink" href="#tile-缓冲区属性" title="Permanent link">&para;</a></h3>
+<p>生成的 <code>alloc_tile</code> 操作从 TileType 元数据推导数据类型和维度, 从关联的 TileView 推导布局/分形/填充 (如有):</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>!pto.tile_buf&lt;
+</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>  loc=vec,             // PTO address space (from MemorySpace)
+</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>  dtype=f32,           // Element data type (from TileType)
+</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>  rows=32,             // Tile height (from TileType shape)
+</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>  cols=32,             // Tile width (from TileType shape)
+</span><span id="__span-14-6"><a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>  v_row=32,            // Virtual row size (= rows)
+</span><span id="__span-14-7"><a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>  v_col=32,            // Virtual column size (= cols)
+</span><span id="__span-14-8"><a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>  blayout=row_major,   // Block layout (from TileView, default: row_major)
+</span><span id="__span-14-9"><a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>  slayout=none_box,    // Scatter layout (from TileView, default: none_box)
+</span><span id="__span-14-10"><a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>  fractal=512,         // Fractal size (from TileView, default: 512)
+</span><span id="__span-14-11"><a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>  pad=0                // Pad mode as int (from TileView, default: 0/null)
+</span><span id="__span-14-12"><a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>&gt;
+</span></code></pre></div>
+<p><strong>TileView 推导的属性</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>属性</th>
+<th>来源</th>
+<th>枚举值</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blayout</code></td>
+<td><code>TileView::blayout</code></td>
+<td><code>none_box</code>, <code>row_major</code>, <code>col_major</code></td>
+<td><code>row_major</code></td>
+</tr>
+<tr>
+<td><code>slayout</code></td>
+<td><code>TileView::slayout</code></td>
+<td><code>none_box</code>, <code>row_major</code>, <code>col_major</code></td>
+<td><code>none_box</code></td>
+</tr>
+<tr>
+<td><code>fractal</code></td>
+<td><code>TileView::fractal</code></td>
+<td>uint64</td>
+<td><code>512</code></td>
+</tr>
+<tr>
+<td><code>pad</code></td>
+<td><code>TileView::pad</code></td>
+<td><code>null(0)</code>, <code>zero(1)</code>, <code>max(2)</code>, <code>min(3)</code></td>
+<td><code>null(0)</code></td>
+</tr>
+</tbody>
+</table>
+<p>当 MemRef 没有关联 TileView 时, 代码生成器使用上表中的默认值。</p>
+<h2 id="内核包装器生成-pto-后端">内核包装器生成 (PTO 后端)<a class="headerlink" href="#内核包装器生成-pto-后端" title="Permanent link">&para;</a></h2>
+<p>通过 <code>ir.compile()</code> 使用 PTO 后端编译时, 会自动为每个 InCore 函数生成内核包装器, 以桥接 ptoas 输出到 CCE/编排调用约定。</p>
+<h3 id="流水线">流水线<a class="headerlink" href="#流水线" title="Permanent link">&para;</a></h3>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>InCore Function -&gt; PTOCodegen -&gt; .pto -&gt; ptoas -&gt; .cpp -&gt; kernel_wrapper -&gt; kernels/aiv/&lt;name&gt;.cpp
+</span></code></pre></div>
+<p>每个 InCore 函数通过 ptoas 独立编译。最终的包装器文件包含:</p>
+<ol>
+<li><strong>预处理后的 ptoas 代码</strong> (<code>__global__ AICORE</code> 替换为 <code>static</code>)</li>
+<li><strong><code>kernel_entry(__gm__ int64_t* args)</code></strong> 包装器, 解包参数数组并转发到 ptoas 函数</li>
+</ol>
+<h3 id="输出结构">输出结构<a class="headerlink" href="#输出结构" title="Permanent link">&para;</a></h3>
+<p>当程序包含编排函数时, PTO 后端生成与 CCE 后端相同的输出结构:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>output_dir/
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>├── passes_dump/                     # IR after each pass
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>├── ptoas/                           # Intermediates
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>│   ├── &lt;func_name&gt;.pto              # MLIR from PTOCodegen
+</span><span id="__span-16-5"><a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>│   └── &lt;func_name&gt;.cpp              # C++ from ptoas
+</span><span id="__span-16-6"><a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>├── kernels/aiv/
+</span><span id="__span-16-7"><a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>│   └── &lt;func_name&gt;.cpp              # Final wrapper (CCE-compatible)
+</span><span id="__span-16-8"><a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>├── orchestration/
+</span><span id="__span-16-9"><a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>│   └── &lt;orch_func_name&gt;.cpp         # PTO2 runtime orchestration code
+</span><span id="__span-16-10"><a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>└── kernel_config.py                 # Runtime/orchestration/kernel config
+</span></code></pre></div>
+<p>编排代码生成与 CCE 共享 -- 两个后端使用 PTO2 运行时 API (<code>pto2_rt_submit_task</code>, <code>make_tensor_external</code> 等) 生成相同的编排 C++ 代码。</p>
+<h3 id="参数解包">参数解包<a class="headerlink" href="#参数解包" title="Permanent link">&para;</a></h3>
+<p>包装器按照与 CCECodegen 相同的约定解包 <code>int64_t* args</code>:</p>
+<table>
+<thead>
+<tr>
+<th>参数类型</th>
+<th>解包模式</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TensorType</code></td>
+<td><code>Tensor*</code> -&gt; <code>buffer.addr</code> -&gt; 带类型指针</td>
+</tr>
+<tr>
+<td><code>ScalarType</code></td>
+<td><code>uint64_t</code> -&gt; 联合体解码 -&gt; 带类型值</td>
+</tr>
+</tbody>
+</table>
+<h3 id="实现">实现<a class="headerlink" href="#实现" title="Permanent link">&para;</a></h3>
+<p><strong>模块</strong>: <code>python/pypto/backend/pto_backend.py</code></p>
+<p>关键函数:</p>
+<ul>
+<li><code>generate()</code> -- 入口点: 生成所有 PTO 后端文件 (内核 + 编排 + 配置)</li>
+<li><code>_preprocess_ptoas_output()</code> -- 去除重复包含, 将函数设为静态</li>
+<li><code>_generate_arg_unpacking()</code> -- 根据 IR 参数类型生成 C++ 解包代码</li>
+<li><code>_generate_kernel_wrapper()</code> -- 组装完整的包装器文件</li>
+</ul>
+<h2 id="另请参阅">另请参阅<a class="headerlink" href="#另请参阅" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../../passes/00-pass_manager/">Pass 管理器</a>: 了解 Pass 流水线</li>
+<li><a href="../../ir/06-builder/">IR 构建器 (Builder)</a>: 以编程方式构造 IR</li>
+<li><a href="../../ir/05-operators/">操作符组织</a>: Tile 操作详情</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+</div>
+      
+        
+<div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/pypto" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M173.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M252.8 8C114.1 8 8 113.3 8 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C436.2 457.8 504 362.9 504 252 504 113.3 391.5 8 252.8 8M105.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy", "content.code.annotate"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u5df2\u590d\u5236", "clipboard.copy": "\u590d\u5236", "search.result.more.one": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.more.other": "\u5728\u8be5\u9875\u4e0a\u8fd8\u6709 # \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.none": "\u6ca1\u6709\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.one": "\u627e\u5230 1 \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.other": "# \u4e2a\u7b26\u5408\u6761\u4ef6\u7684\u7ed3\u679c", "search.result.placeholder": "\u952e\u5165\u4ee5\u5f00\u59cb\u641c\u7d22", "search.result.term.missing": "\u7f3a\u5c11", "select.version": "\u9009\u62e9\u5f53\u524d\u7248\u672c"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

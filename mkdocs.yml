@@ -1,0 +1,186 @@
+site_name: PyPTO 学习文档
+site_description: PyPTO 编译器学习文档 - 整合 pypto、pto-as、pto-isa 三个项目的中文文档
+site_author: PyPTO Learner
+
+# 主题配置
+theme:
+  name: material
+  language: zh
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: 切换到深色模式
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: 切换到浅色模式
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+  icon:
+    repo: fontawesome/brands/git-alt
+
+# Markdown 扩展
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+      slugify: !!python/name:pymdownx.slugs.uslugify
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.magiclink:
+      repo_url_shorthand: true
+      user: pypto
+      repo: pypto
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# 额外配置
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/pypto
+  generator: false
+
+extra_javascript:
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+extra_css:
+  - stylesheets/extra.css
+
+# 插件
+plugins:
+  - search:
+      lang:
+        - zh
+        - en
+
+# 文档目录
+docs_dir: docs
+
+# 导航结构
+nav:
+  - 首页: index.md
+  - PyPTO:
+    - 概述: pypto/dev/passes/00-pass_manager.md
+    - Pass 文档:
+      - Pass Manager: pypto/dev/passes/00-pass_manager.md
+      - UnrollLoops: pypto/dev/passes/01-unroll_loops.md
+      - CtrlFlowTransform: pypto/dev/passes/02-ctrl_flow_transform.md
+      - ConvertToSSA: pypto/dev/passes/03-convert_to_ssa.md
+      - FlattenCallExpr: pypto/dev/passes/04-flatten_call_expr.md
+      - SplitChunkedLoops: pypto/dev/passes/05-split_chunked_loops.md
+      - InterchangeChunkLoops: pypto/dev/passes/06-interchange_chunk_loops.md
+      - OutlineIncoreScopes: pypto/dev/passes/07-outline_incore_scopes.md
+      - OutlineClusterScopes: pypto/dev/passes/08-outline_cluster_scopes.md
+      - FlattenTileNdTo2D: pypto/dev/passes/10-flatten_tile_nd_to_2d.md
+      - InitMemRef: pypto/dev/passes/12-init_memref.md
+      - MemoryReuse: pypto/dev/passes/15-memory_reuse.md
+      - InsertSync: pypto/dev/passes/14-insert_sync.md
+      - Utility Passes: pypto/dev/passes/16-utility_passes.md
+      - Verifier: pypto/dev/passes/99-verifier.md
+    - IR 文档:
+      - IR 概述: pypto/dev/ir/00-overview.md
+      - 层级结构: pypto/dev/ir/01-hierarchy.md
+      - 类型系统: pypto/dev/ir/02-types.md
+      - 结构对比: pypto/dev/ir/03-structural_comparison.md
+      - 序列化: pypto/dev/ir/04-serialization.md
+      - 操作符: pypto/dev/ir/05-operators.md
+      - Builder: pypto/dev/ir/06-builder.md
+      - Parser: pypto/dev/ir/07-parser.md
+    - Codegen 文档:
+      - PTO Codegen: pypto/dev/codegen/00-pto_codegen.md
+      - CCE Codegen: pypto/dev/codegen/01-cce_codegen.md
+      - Orchestration Codegen: pypto/dev/codegen/02-orchestration_codegen.md
+    - Language 文档:
+      - Python 语法: pypto/dev/language/00-python_syntax.md
+    - 参考文档:
+      - PTO-ISA 参考:
+        - Cluster 架构: pypto/reference/pto-isa/00-cluster_architecture.md
+        - TPUSH/TPOP: pypto/reference/pto-isa/01-tpush_tpop.md
+        - Buffer 管理: pypto/reference/pto-isa/02-buffer_management.md
+  - pto-as:
+    - 概述: pto-as/index.md
+    - 入门:
+      - PTO IR 概述: pto-as/01-overview.md
+      - 无 NPU 编译指南: pto-as/no_npu_compile_only_guide_zh.md
+    - 参考:
+      - 类型系统: pto-as/02-type-system.md
+      - 枚举与属性: pto-as/03-enums-attrs.md
+      - 操作参考: pto-as/04-operations.md
+      - 完整 PTO IR 手册: pto-as/PTO_IR_manual.md
+      - 后端 Pass: pto-as/05-passes.md
+    - 操作详解:
+      - 概述: pto-as/operations/README_zh.md
+      - 逐元素操作: pto-as/operations/elementwise-ops_zh.md
+      - Tile-标量操作: pto-as/operations/tile-scalar-ops_zh.md
+      - 轴归约扩展: pto-as/operations/axis-ops_zh.md
+      - 内存操作: pto-as/operations/memory-ops_zh.md
+      - 矩阵操作: pto-as/operations/matrix-ops_zh.md
+      - 数据搬运: pto-as/operations/data-movement-ops_zh.md
+      - 复杂操作: pto-as/operations/complex-ops_zh.md
+      - 标量算术: pto-as/operations/scalar-arith-ops_zh.md
+      - 控制流: pto-as/operations/control-flow-ops_zh.md
+    - 设计文档:
+      - TPUSH/TPOP 设计: pto-as/designs/ptoas-tpush-tpop-design.md
+  - pto-isa:
+    - 概述: pto-isa/01-overview_zh.md
+    - 机器模型: pto-isa/02-machine-model_zh.md
+    - 状态与类型: pto-isa/03-state-and-types_zh.md
+    - Tile 与 GlobalTensor: pto-isa/04-tiles-and-globaltensor_zh.md
+    - 同步机制: pto-isa/05-synchronization_zh.md
+    - 汇编语言: pto-isa/06-assembly_zh.md
+    - 指令集: pto-isa/07-instructions_zh.md
+    - 编程指南: pto-isa/08-programming_zh.md
+    - 虚拟 ISA 与 IR: pto-isa/09-virtual-isa-and-ir_zh.md
+    - 字节码与工具链: pto-isa/10-bytecode-and-toolchain_zh.md
+    - 内存顺序与一致性: pto-isa/11-memory-ordering-and-consistency_zh.md
+    - 后端配置与一致性: pto-isa/12-backend-profiles-and-conformance_zh.md
+    - 附录:
+      - 术语表: pto-isa/appendix-a-glossary_zh.md
+      - 指令契约模板: pto-isa/appendix-b-instruction-contract-template_zh.md
+      - 诊断分类: pto-isa/appendix-c-diagnostics-taxonomy_zh.md
+      - 指令族矩阵: pto-isa/appendix-d-instruction-family-matrix_zh.md
