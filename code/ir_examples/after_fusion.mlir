@@ -1,21 +1,13 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // after_fusion.mlir
-// VF Fusion Pass（VectorFusionPass）执行后的 PTO Level-2 IR 示例
+// ⚠️  概念示意 IR，并非从真实 PTOAS 工具链产出
 //
-// 场景：tadd + tmul 两个 Vector op 被融合为一个 pto.fused_vec_op
-//       中间缓冲区 %tmp 被消除，片上内存占用减少 1 个 tile_buf
+// 此文件展示：假设编译器存在算子融合能力，融合 Pass 执行后的
+// PTO Level-2 IR 可能是什么样子（中间 tile_buf 被消除）。
 //
-// 对应 Python 代码：code/vf_fusion_example.py auto_fusion_example()
-// 对应文档：docs/vf-fusion.md §二 VF Fusion Pass
-// 对应 Pass 选项：ptoas --pto-vf-fusion（默认开启）
-//
-// 与 before_fusion.mlir 的关键差异：
-//   1. %tmp 分配被消除（pto.alloc_tile 减少一处）
-//   2. pto.tadd + pto.tmul → pto.fused_vec_op { tadd; tmul }
-//   3. InsertSync 后事件同步点从 2 对变为 1 对（见注释）
-//
-// 参考来源：
-//   https://github.com/PTO-ISA/PTOAS/blob/main/docs/PTO_IR_manual.md
+// `pto.fused_vec_op` 是此处自创的示意节点名称，
+// 并非 PTOAS 中已确认存在的 IR Op。
+// 真实 PTOAS 的 Pass 名称、IR 语法细节以内部文档为准。
 // ─────────────────────────────────────────────────────────────────────────────
 
 module @auto_fusion_example_after_vf_fusion {

@@ -1,13 +1,11 @@
 // ─────────────────────────────────────────────────────────────────────────────
 // before_fusion.mlir
-// VF Fusion Pass 执行前的 PTO Level-2 IR 示例
+// ⚠️  概念示意 IR，并非从真实 PTOAS 工具链产出
 //
-// 场景：tadd + tmul 两个 Vector op 串联，但尚未融合
-// 对应 Python 代码：code/vf_fusion_example.py auto_fusion_example()
-// 对应文档：docs/vf-fusion.md §二 VF Fusion Pass
+// 此文件展示：假设编译器存在算子融合能力，融合 Pass 执行前的
+// PTO Level-2 IR 可能是什么样子。
 //
-// 参考来源：
-//   https://github.com/PTO-ISA/PTOAS/blob/main/docs/PTO_IR_manual.md
+// 真实 PTOAS 的 Pass 名称、IR 语法细节以内部文档为准。
 // ─────────────────────────────────────────────────────────────────────────────
 
 module @auto_fusion_example {
