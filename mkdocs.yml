@@ -1,0 +1,35 @@
+site_name: PyPTO Learning
+site_url: https://ariusewy.github.io/PyPTO_learning/
+repo_url: https://github.com/ariusewy/PyPTO_learning
+
+theme:
+  name: readthedocs
+  language: en
+
+docs_dir: docs
+site_dir: site
+
+plugins:
+  - search
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+
+nav:
+  - Home: index.md
+  - PyPTO:
+      - Getting Started: pypto/getting-started.md
+      - User Guide:
+          - Getting Started: pypto/user/00-getting_started.md
+          - Language Guide: pypto/user/01-language_guide.md
+          - Operation Reference: pypto/user/02-operation_reference.md
+  - PTO-AS (Assembler):
+      - Overview: pto-as/README.md
+      - PTO IR Manual: pto-as/PTO_IR_manual.md
+  - PTO-ISA:
+      - Getting Started: pto-isa/getting-started.md
+      - ISA Reference: pto-isa/PTOISA.md
+      - Docs Index: pto-isa/README.md
