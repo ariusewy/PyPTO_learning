@@ -1,0 +1,9 @@
+[submodule "pypto"]
+	path = pypto
+	url = https://github.com/hw-native-sys/pypto.git
+[submodule "pto-as"]
+	path = pto-as
+	url = https://github.com/zhangstevenunity/PTOAS.git
+[submodule "pto-isa"]
+	path = pto-isa
+	url = https://github.com/PTO-ISA/pto-isa.git
